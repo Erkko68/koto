@@ -2,17 +2,19 @@ package io.github.erkko68.koto
 
 import io.github.erkko68.koto.interop.loadNativeLibrary
 import org.junit.Assume.assumeTrue
+import java.io.File
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.test.Test
 
 private const val STEP_MS = 30L
+private const val CLIP = "../../miniaudio/data/16-44100-stereo.flac"
 
 /**
  * For ears: plays a file through the default output device, a scene at a time, saying what to listen for.
- * `KOTO_LISTEN=<file> ./gradlew :kotlin:koto:jvmTest --tests '*ListenTest*' --rerun`, with KOTO_VOLUME for its loudness
- * (0.3 unless set). Skipped without KOTO_LISTEN.
+ * `KOTO_LISTEN=1 ./gradlew :kotlin:koto:jvmTest --tests '*ListenTest*' --rerun` plays miniaudio's own test clip;
+ * KOTO_LISTEN=<file> plays that file instead, and KOTO_VOLUME sets its loudness (0.3 unless set). Skipped without KOTO_LISTEN.
  */
 class ListenTest {
     private fun scene(what: String, seconds: Double, step: (Double) -> Unit = {}) {
@@ -26,8 +28,9 @@ class ListenTest {
 
     @Test
     fun listen() {
-        val file = System.getenv("KOTO_LISTEN")
-        assumeTrue("Set KOTO_LISTEN to a file to play", file != null)
+        val listen = System.getenv("KOTO_LISTEN")
+        assumeTrue("Set KOTO_LISTEN to listen", listen != null)
+        val file = listen.takeIf { File(it).isFile } ?: CLIP
         loadNativeLibrary()
         println("miniaudio ${versionString()}, playing $file")
         val engine = EngineConfig.init().use { Engine.init(it) }
