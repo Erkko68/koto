@@ -1,0 +1,134 @@
+package buildlogic.apigen.c
+
+import buildlogic.apigen.ApiGenConfig
+import buildlogic.apigen.Scalar
+
+/**
+ * The bridges of a value C passes as it is, given how C++ takes it: [const], [indirection] (`*`, `&`, `&&` or none),
+ * as a parameter or a [result], and whether it outlives the call ([lvalue]). [CBridges] wraps these for sequences,
+ * optionals and functions.
+ */
+class DirectBridges internal constructor(
+    private val config: ApiGenConfig, private val names: CNames,
+    val const: Boolean, val indirection: String?, val result: Boolean, val lvalue: Boolean,
+) {
+    private val h = config.c.helpers
+    val byValue = indirection == null || (indirection == "&" && const)
+    val c = if (const) "const " else ""
+
+    fun scalar(decl: String, scalar: Scalar): CBridge {
+        if (byValue) {
+            val out = result && CAbi.returnsThroughPointer(scalar.c)
+            return CBridge(scalar.c, if (result) scalar::toC else scalar::toCpp, out = out, value = (if (scalar.c == "bool") CValue.Builtin("bool") else CValue.Scalar(names.type(decl), scalar.c)).takeIf { !out })
+        }
+        if (!scalar.layout || indirection == "&&") throw Unsupported("$decl by pointer")
+        return pointer(scalar.c, decl, CValue.Scalar(names.type(decl), scalar.c))
+    }
+
+    /** Strings cross as NUL-terminated `const char*`: copied in, and out only when the C++ string outlives the call. */
+    fun string(decl: String): CBridge {
+        if (!byValue) throw Unsupported("$decl by pointer")
+        return when {
+            !result -> CBridge("const char*", { "${config.types.allStrings.getValue(decl)}($it)" }, value = CValue.Text)
+            // ponytail: assumes the view is NUL-terminated (literals, string storage); an out length if one isn't.
+            decl == "std::string_view" -> CBridge("const char*", { "($it).data()" }, value = CValue.Text)
+            // A temporary: copied into C's buffer, not NUL-terminated; returns its length.
+            indirection == null && !lvalue -> CBridge(
+                "uint32_t",
+                { call -> "$h::copy($call, outCapacity, [&](char x, uint32_t i) { out[i] = x; })" },
+                extra = CBridge.filled("char*"),
+            )
+            else -> CBridge("const char*", { "($it).c_str()" }, value = CValue.Text)
+        }
+    }
+
+    fun builtin(spelled: String): CBridge {
+        val base = spelled.removePrefix("std::")
+        if (byValue) {
+            val cType = CAbi.byValue(base)
+            val out = result && CAbi.returnsThroughPointer(cType)
+            return CBridge(cType, if (cType == base) { v -> v } else cast(cType, base), out = out, value = CValue.Builtin(cType))
+        }
+        CAbi.checkPointee(base)
+        val element = CValue.Builtin(CAbi.element(base))
+        return when {
+            indirection == "*" -> CBridge("$c$base*", { it }, value = when {
+                const && base == "char" -> CValue.Text
+                base == "void" -> CValue.Opaque
+                else -> referenced(element)
+            })
+            result -> CBridge("$base*", { "&$it" })
+            else -> CBridge("$base*", { "*$it" }, value = referenced(element))
+        }
+    }
+
+    /** [plain]: no fixed underlying type, so C's enum is laid out as C++'s and a pointer to one is a pointer to the other. */
+    fun enum(decl: String, wideType: String?, plain: Boolean): CBridge {
+        val name = names.type(decl)
+        if (!byValue) return if (plain && indirection != "&&") pointer(name, decl, CValue.Enum(name)) else throw Unsupported("$decl by pointer")
+        return CBridge(name, cast(name, decl), out = result && wideType != null && CAbi.returnsThroughPointer(wideType), value = CValue.Enum(name).takeIf { wideType == null })
+    }
+
+    /**
+     * Structs never cross by value: parameters come by `const` pointer, results go out through one. C++ can't use
+     * C's storage of a SIMD type in place ([alignedMirror]): one it writes through a reference is copied in and back,
+     * as is an array of them by pointer, which C then passes the count of.
+     */
+    fun math(decl: String): CBridge {
+        val name = names.type(decl)
+        val value = config.types.mirrors.getValue(decl).let { CValue.Mirror(name, it.element, it.count) }
+        return when {
+            byValue && result -> CBridge(name, { "$h::mirror<$name>($it)" }, out = true, value = value)
+            byValue -> CBridge("const $name*", { "$h::math<$decl>(*$it)" }, value = value)
+            result || !config.types.mirrors.getValue(decl).aligned -> handle(name, referenced(value))
+            indirection == "&" -> CBridge("$name*", { "$h::InOut<$decl, $name>($it)" }, value = referenced(value))
+            else -> CBridge("$c$name*", { "$h::Aligned<$decl, $c$name>($it, ${it}Count)" }, extra = CBridge.COUNT, value = referenced(value))
+        }
+    }
+
+    /**
+     * A value struct taken or returned by value is copied: in from a `const` pointer, out into one C created. A result
+     * by value C can't create one for, or of a class that isn't a value, is moved to one C destroys, when it can ([owned]).
+     */
+    fun record(decl: String, value: Boolean, copyable: Boolean, owned: Boolean): CBridge {
+        val name = names.type(decl)
+        val record = CValue.Handle(name, nullable = indirection == "*")
+        val copy by lazy { CBridge("$name*", { "$h::c(new $decl($it))" }, value = CValue.Handle(name, nullable = false, owned = true)) }
+        return when {
+            !value && indirection == null && result && owned -> copy
+            !value && indirection == null -> throw Unsupported("$decl by value")
+            !value || !byValue -> handle(name, record)
+            !result -> CBridge("const $name*", { "*$h::cpp($it)" }, value = CValue.Handle(name, nullable = false))
+            // C can't create one to copy into; a reference's outlives the call, so C borrows it.
+            !copyable && indirection == "&" -> handle(name, record)
+            !copyable && owned -> copy
+            !copyable -> throw Unsupported("$decl result: C can't create one to copy it into")
+            else -> CBridge(name, { it }, out = true, store = { v, out -> "*$h::cpp($out) = $v;" }, value = CValue.Handle(name, nullable = false))
+        }
+    }
+
+    /** Casts to C's [cType] for a result, to C++'s [cpp] for a parameter. */
+    private fun cast(cType: String, cpp: String) = if (result) { v: String -> "static_cast<$cType>($v)" } else { v -> "static_cast<$cpp>($v)" }
+
+    /** C passes a pointer whichever of `*` or `&` C++ takes. */
+    private fun pointer(cName: String, cppName: String, element: CValue): CBridge {
+        val cType = "$c$cName*"
+        val address = if (indirection == "*") "" else "&"
+        return if (result) CBridge(cType, { "reinterpret_cast<$cType>($address$it)" })
+        else CBridge(cType, { (if (indirection == "*") "" else "*") + "reinterpret_cast<$c$cppName*>($it)" }, value = referenced(element))
+    }
+
+    /** What a parameter by pointer, or by non-const reference, passes of [element]; a result that's one stays untyped. */
+    private fun referenced(element: CValue) = when {
+        result -> null
+        indirection == "*" -> CValue.Pointer(element, const)
+        else -> CValue.InOut(element)
+    }
+
+    /** A pointer to a record's handle or a math mirror, converted by the `cpp`/`c` overloads. */
+    private fun handle(cName: String, value: CValue?): CBridge {
+        val ref = indirection != "*"
+        return if (result) CBridge("$c$cName*", { "$h::c(${if (ref) "&" else ""}$it)" }, value = value)
+        else CBridge("$c$cName*", { "${if (ref) "*" else ""}$h::cpp($it)" }, value = value)
+    }
+}

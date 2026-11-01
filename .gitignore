@@ -1,0 +1,13 @@
+**/build/
+.gradle/
+.kotlin/
+.idea/
+*.iml
+.DS_Store
+local.properties
+.vscode/
+.cxx/
+kotlin-js-store/
+*.log
+*.hprof
+.emsdk/
