@@ -1,0 +1,21 @@
+# Which of miniaudio is API, and what in it is left out.
+[koto]
+miniaudio.h
+
+# The modules a game uses. Raw DSP, conversion, ring buffers and the like are what these drive for you; a line here
+# binds one when something needs it.
+-::ma_(?!(engine|sound|resource_manager|node|data_source|audio_buffer|decoder|encoder|waveform|noise|pulsewave|device|context|fence|async_notification|(biquad|lpf|hpf|bpf|notch|peak|loshelf|hishelf|delay|splitter)_node|version|result_description)).*
+-ma_(?!(engine|sound|resource_manager|node|data_source|audio_buffer|decoder|encoder|decoding_backend|waveform|noise|pulsewave|device|context|fence|async_notification|(biquad|lpf|hpf|bpf|notch|peak|loshelf|hishelf|delay|splitter)_node|vec3f|allocation_callbacks|log|vfs|file_info)\b|\w*_config$)\w*
+
+# Only ever handles: past a config, a struct's fields are miniaudio's state, and some differ per platform.
+-(?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+
+# ma_sound_group is ma_sound, and its functions forward to ma_sound's.
+-::ma_sound_group_(?!init|uninit).*
+
+# Structs on POSIX, plain handles on Win32: not API to bind from one platform's headers, and not audio.
+-ma_event
+-ma_semaphore
+
+# UTF-16 variants: Kotlin strings cross as UTF-8.
+-::ma_.*_w

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: miniaudio bug (audio behavior, asserts, crashes inside miniaudio)
+    url: https://github.com/mackron/miniaudio/issues
+    about: >-
+      If the problem reproduces using miniaudio directly from C (not specific to the Kotlin wrapper),
+      please report it upstream to miniaudio. Feel free to link it back here with the
+      `upstream-miniaudio` label.
+  - name: Question / usage help
+    url: https://github.com/Erkko68/koto/discussions
+    about: For how-to questions and general discussion.

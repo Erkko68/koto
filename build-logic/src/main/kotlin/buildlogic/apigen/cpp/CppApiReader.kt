@@ -1,0 +1,270 @@
+package buildlogic.apigen.cpp
+
+import buildlogic.apigen.ApiGenConfig
+import java.io.File
+import java.math.BigInteger
+
+/** Builds a [CppApi] from clang's AST of [headers]; nothing here parses C++ itself. */
+internal class CppApiReader(private val config: ApiGenConfig, private val workDir: File) {
+    private val ast = ClangAstDump(config, workDir)
+    private val scopes = CppScopes()
+    private val records = LinkedHashMap<String, CppRecord>()
+    private val enums = LinkedHashMap<String, CppEnum>()
+    private val aliases = LinkedHashMap<String, CppType>()
+    private val constants = HashMap<String, CppValue>()
+    private val publicConstants = HashSet<String>()
+    private val functions = ArrayList<CppMethod>()
+    private val values = CppValues(scopes, constants)
+    private val seenHeaders = HashSet<String>()
+    private var locationOf: Map<Map<*, *>, Location> = emptyMap()
+    /** C's `typedef struct {…} name;`: each unnamed declaration by id, and its document's locations, until the typedef names it. */
+    private val unnamed = HashMap<Any?, Pair<Map<*, *>, Map<Map<*, *>, Location>>>()
+    private lateinit var guards: PreprocessorGuards
+
+    /** Reads [headers] (paths relative to [includeDir]); each must declare something the filters dump. */
+    fun read(includeDir: File, headers: Collection<String>): CppApi {
+        guards = PreprocessorGuards(includeDir)
+        val unit = workDir.resolve("headers.cpp")
+        unit.writeText((config.sources.prelude + headers.sorted()).joinToString("") { "#include <$it>\n" })
+        scopes.namespace("std")
+        // Every filter's namespace up front, before any dump runs.
+        config.sources.astFilters.forEach { filter ->
+            val namespace = filter.substringBeforeLast("::", "")
+            if (filter.endsWith("::")) scopes.namespace(namespace) else if (namespace.isNotEmpty()) scopes.partialNamespace(namespace)
+            config.sources.skippedNamespaces.forEach { scopes.partialNamespace(qualify(namespace, it)) }
+        }
+        // A filter dumps the outermost declarations it matches, so each document sits in the filter's namespace.
+        config.sources.astFilters.forEach { filter ->
+            val namespace = filter.substringBeforeLast("::", "")
+            ast.forEachDeclaration(unit, includeDir, filter, config.sources.skippedNamespaces) { document ->
+                locationOf = DeclarationFiles.of(document, includeDir)
+                visit(document, namespace, exported = false, accessible = true)
+            }
+        }
+        val missed = headers.filterNot { it in seenHeaders }
+        check(missed.isEmpty()) { "No AST filter dumps the declarations of ${missed.joinToString()}; add one to the config's astFilters" }
+        return CppApi(records, enums, aliases, constants, publicConstants, functions)
+    }
+
+    /**
+     * [exported]: marked with a visibility attribute (an export macro) or publicly nested in an exported class, what the libraries' symbols follow.
+     * [accessible]: nameable from outside, at namespace scope or publicly nested.
+     */
+    private fun visit(node: Map<*, *>, scope: String, exported: Boolean, accessible: Boolean, template: Boolean = false, typedefName: String? = null) {
+        locationOf[node]?.header?.let(seenHeaders::add)
+        val kind = node["kind"]
+        if (kind == "UsingDirectiveDecl") return scopes.usingNamespace(scope, (node["nominatedNamespace"] as Map<*, *>)["name"] as String)
+        val name = typedefName ?: node["name"] as? String ?: return run { if (kind in TAGS) unnamed[node["id"]] = node to locationOf }
+        if (kind == "UsingDecl") return scopes.usingName(scope, name)
+        val qualified = qualify(scope, name)
+        when (kind) {
+            "NamespaceDecl" -> {
+                scopes.namespace(qualified)
+                node.children().forEach { visit(it, qualified, exported = false, accessible = true) }
+            }
+            "ClassTemplateDecl" -> node.children().forEach { child ->
+                if (child["kind"] == "TemplateTypeParmDecl") (child["name"] as? String)?.let { scopes.templateParameter("$qualified::$it") }
+                visit(child, scope, exported, accessible, template = true)
+            }
+            "CXXRecordDecl" -> if (node["isImplicit"] != true) {
+                scopes.type(qualified)
+                if (node["completeDefinition"] == true) visitRecord(node, qualified, exported, accessible, template)
+            }
+            // A redeclaration repeats one already read.
+            "FunctionDecl" -> if (node["previousDecl"] == null) functions += method(node, scope, isPublic = true, free = true)
+            "FunctionTemplateDecl" -> template(node, scope, isPublic = true, free = true)?.let { functions += it }
+            "EnumDecl" -> visitEnum(node, qualified)
+            "TypeAliasDecl", "TypedefDecl" -> {
+                unnamed.remove(node.children().firstNotNullOfOrNull { (it["ownedTagDecl"] as? Map<*, *>)?.get("id") })?.let { (tag, locations) ->
+                    locationOf = locations
+                    return visit(tag, scope, exported, accessible, typedefName = name)
+                }
+                val target = scopes.resolve(spelledType(node), scope)
+                // C's `typedef struct name name;` names the struct, not another type.
+                if (target.decl == qualified) return scopes.type(qualified)
+                aliases[qualified] = target
+                scopes.alias(qualified, target.decl)
+            }
+            "VarDecl" -> {
+                scopes.variable(qualified)
+                values.declared(node["id"] as String, qualified)
+                initializer(node)?.let { constants[qualified] = values.of(it, scope); if (accessible) publicConstants += qualified }
+            }
+        }
+    }
+
+    /** Records a derived one can't default-construct: they declare constructors, none callable without arguments, or a base is one. */
+    private val withoutDefault = HashSet<String>()
+
+    private fun visitRecord(node: Map<*, *>, qualified: String, exported: Boolean, accessible: Boolean, template: Boolean) {
+        val children = node.children()
+        @Suppress("UNCHECKED_CAST")
+        val bases = (node["bases"] as? List<Map<*, *>>).orEmpty()
+        scopes.bases(qualified, bases.map(::spelledType))
+        val publicBases = bases.filter { it["access"] == "public" }.mapNotNull { scopes.lookup(spelledType(it).substringBefore('<'), qualified) }
+        val public = exported || children.any { it["kind"] == "VisibilityAttr" }
+        val methods = ArrayList<CppMethod>()
+        val fields = ArrayList<CppField>()
+        val dd = node["definitionData"] as? Map<*, *>
+        val abstract = dd?.get("isAbstract") == true
+        val constructors = ArrayList<List<CppParam>>()
+        // A base with constructors but no default one deletes the implicit default (ShapeCast, which inherits ShapeCastT's).
+        val implicitDefault = publicBases.none { it in withoutDefault }
+        var declaresDefault = false
+        var declaresConstructor = false
+        if (!abstract && implicitDefault && (dd?.get("defaultCtor") as? Map<*, *>)?.get("needsImplicit") == true) constructors += emptyList<CppParam>()
+        var destructible = true
+        var declaredDestructor = false
+        // A declared move constructor deletes the implicit copy, as a base that can't be copied does (NonCopyable).
+        var copyable = !abstract && publicBases.all { records[it]?.copyable != false } &&
+            ((dd?.get("moveCtor") as? Map<*, *>)?.get("userDeclared") != true || (dd?.get("copyCtor") as? Map<*, *>)?.get("userDeclared") == true)
+        var allocatable = publicBases.all { records[it]?.allocatable != false }
+        var access = if (node["tagUsed"] == "class") "private" else "public"
+        for ((index, child) in children.withIndex()) {
+            // Implicit members are public, wherever clang lists them.
+            val isPublic = access == "public" || child["isImplicit"] == true
+            when (child["kind"]) {
+                "AccessSpecDecl" -> access = child["access"] as String
+                "CXXMethodDecl" -> {
+                    methods += method(child, qualified, isPublic)
+                    if (child["name"] == "operator new" && (child["explicitlyDeleted"] == true || !isPublic)) allocatable = false
+                }
+                "CXXConstructorDecl" -> {
+                    val params = method(child, qualified, isPublic).params
+                    val usable = isPublic && child["explicitlyDeleted"] != true
+                    val self = params.singleOrNull()?.type?.takeIf { it.decl == qualified }
+                    // An abstract record's, and protected ones, too: a derived record's implicit default calls them.
+                    if (child["isImplicit"] != true && self == null && child["explicitlyDeleted"] != true && access != "private") {
+                        declaresConstructor = true
+                        if (params.all { it.default != null }) declaresDefault = true
+                    }
+                    if (self != null && "&&" !in self.spelling && !usable) copyable = false
+                    // Copies and moves take the record itself; C holds handles, never copies. Implicit ones count: an
+                    // aggregate's default constructor is declared once a header uses it.
+                    val deleted = child["isImplicit"] == true && params.isEmpty() && !implicitDefault
+                    if (!abstract && usable && self == null && !deleted) constructors += params
+                }
+                "FunctionTemplateDecl" -> template(child, qualified, isPublic, free = false)?.let { methods += it }
+                "CXXDestructorDecl" -> {
+                    destructible = isPublic && child["explicitlyDeleted"] != true
+                    declaredDestructor = destructible && child["isImplicit"] != true
+                }
+                "FieldDecl" -> (child["name"] as? String)?.takeUnless { UNNAMED_TYPE in spelledType(child) }?.let { name ->
+                    val type = scopes.resolve(spelledType(child), qualified)
+                    val deprecated = child.children().any { it["kind"] == "DeprecatedAttr" }
+                    fields += CppField(name, type, initializer(child)?.let { values.of(it, qualified) }, isPublic, deprecated, child.doc())
+                }
+                "CXXRecordDecl" if child["name"] == null -> nestedFields(children, index, "").forEach { (name, field) ->
+                    fields += CppField(name, scopes.resolve(spelledType(field), qualified), null, isPublic, false, field.doc())
+                }
+                // `class X getX()` declares X in the namespace, though clang lists it here.
+                "CXXRecordDecl", "ClassTemplateDecl" -> if (child["parentDeclContextId"] == null)
+                    visit(child, qualified, exported = public && isPublic, accessible = accessible && isPublic, template = template)
+                else -> visit(child, qualified, exported = false, accessible = accessible && isPublic)
+            }
+        }
+        if (if (declaresConstructor) !declaresDefault else !implicitDefault) withoutDefault += qualified
+        records[qualified] = CppRecord(
+            qualified, locationOf[node]?.header, public, accessible, template, publicBases, methods, fields, constructors, destructible, allocatable, copyable, declaredDestructor,
+            derivable = qualified !in withoutDefault && children.none { it["kind"] == "FinalAttr" },
+            doc = node.doc(), polymorphic = dd?.get("isPolymorphic") == true,
+        )
+    }
+
+    /**
+     * The fields of the unnamed record at [index] of [siblings], by their path from the outermost record: an anonymous
+     * union or struct's are its parent's own, `struct {…} x;`'s are `x.field`. None for an array of one.
+     */
+    private fun nestedFields(siblings: List<Map<*, *>>, index: Int, path: String): List<Pair<String, Map<*, *>>> {
+        val holder = siblings.getOrNull(index + 1)?.takeIf { it["kind"] == "FieldDecl" && it["name"] != null && UNNAMED_TYPE in spelledType(it) }
+        if (holder != null && spelledType(holder).endsWith("]")) return emptyList()
+        val prefix = path + holder?.let { "${it["name"]}." }.orEmpty()
+        val children = siblings[index].children()
+        return children.flatMapIndexed { i, child ->
+            when {
+                child["kind"] == "FieldDecl" && child["name"] != null && UNNAMED_TYPE !in spelledType(child) -> listOf("$prefix${child["name"]}" to child)
+                child["kind"] == "CXXRecordDecl" && child["name"] == null -> nestedFields(children, i, prefix)
+                else -> emptyList()
+            }
+        }
+    }
+
+    /** A function template's function, its parameters declared in a scope of its own (`owner::name::T`). */
+    private fun template(node: Map<*, *>, owner: String, isPublic: Boolean, free: Boolean): CppMethod? {
+        val function = node.children().firstOrNull { it["kind"] == if (free) "FunctionDecl" else "CXXMethodDecl" } ?: return null
+        val parameters = node.children().filter { it["kind"] in TEMPLATE_PARAMETERS }.mapNotNull { it["name"] as? String }
+        parameters.forEach { scopes.templateParameter("$owner::${function["name"]}::$it") }
+        return method(function, owner, isPublic, free, parameters)
+    }
+
+    /** A method, or with [free] a function in namespace [owner]. */
+    private fun method(node: Map<*, *>, owner: String, isPublic: Boolean, free: Boolean = false, templateParameters: List<String>? = null): CppMethod {
+        val name = node["name"] as String
+        val scope = if (templateParameters != null) "$owner::$name" else owner
+        val (returns, qualifiers) = splitSignature(spelledType(node))
+        val params = node.children().filter { it["kind"] == "ParmVarDecl" }.map { param ->
+            CppParam(
+                param["name"] as? String ?: "",
+                scopes.resolve(spelledType(param), scope),
+                initializer(param)?.let { values.of(it, owner) },
+            )
+        }
+        return CppMethod(
+            owner, name, locationOf[node]?.header, node["mangledName"] as? String, scopes.resolve(returns, scope), params,
+            isStatic = free || node["storageClass"] == "static",
+            isConst = qualifiers.split(' ').contains("const"),
+            isPublic = isPublic,
+            isDeprecated = node.children().any { it["kind"] == "DeprecatedAttr" },
+            isApi = node["isImplicit"] != true && node["explicitlyDeleted"] != true && (!name.startsWith("operator") || name == "operator()"),
+            isOverride = node.children().any { it["kind"] == "OverrideAttr" || it["kind"] == "FinalAttr" },
+            isVirtual = node["virtual"] == true,
+            isPure = node["pure"] == true,
+            isFinal = node.children().any { it["kind"] == "FinalAttr" },
+            templateParameters = templateParameters,
+            guard = locationOf[node]?.let { l -> l.header?.let { guards.at(it, l.line) } },
+            doc = node.doc(),
+        )
+    }
+
+    private fun visitEnum(node: Map<*, *>, qualified: String) {
+        scopes.type(qualified)
+        var next = BigInteger.ZERO
+        val constants = node.children().filter { it["kind"] == "EnumConstantDecl" }.map { constant ->
+            val explicit = constant.children().firstOrNull { it["kind"] == "ConstantExpr" }?.get("value") as? String
+            val value = explicit?.let(::BigInteger) ?: next
+            next = value + BigInteger.ONE
+            constant["name"] as String to value
+        }
+        val underlying = (node["fixedUnderlyingType"] as? Map<*, *>)?.get("qualType") as? String
+        val constantDocs = node.children().mapNotNull { c -> c.doc()?.let { c["name"] as String to it } }.toMap()
+        enums[qualified] = CppEnum(qualified, locationOf[node]?.header, underlying, constants, node.doc(), constantDocs)
+    }
+
+    /** A declaration's initializer: its one child that isn't a comment or an attribute. */
+    private fun initializer(node: Map<*, *>): Map<*, *>? {
+        if (node["init"] == null && node["hasInClassInitializer"] != true) return null
+        return node.children().firstOrNull { child -> NOT_EXPRESSIONS.none { (child["kind"] as String).endsWith(it) } }
+    }
+
+    private fun qualify(scope: String, name: String) = if (scope.isEmpty()) name else "$scope::$name"
+
+    private companion object {
+        const val UNNAMED_TYPE = "(unnamed "
+        val TAGS = setOf("CXXRecordDecl", "EnumDecl")
+        val TEMPLATE_PARAMETERS = setOf("TemplateTypeParmDecl", "NonTypeTemplateParmDecl", "TemplateTemplateParmDecl")
+        val NOT_EXPRESSIONS = listOf("Comment", "Attr", "Decl")
+        val NOEXCEPT_EXPR = Regex("""noexcept\([^()]*\)\s*$""")
+
+        /** Splits a method type like `Mode (int) const noexcept` into its return type and trailing qualifiers. */
+        fun splitSignature(spelled: String): Pair<String, String> {
+            val type = NOEXCEPT_EXPR.replace(spelled, "noexcept")
+            val close = type.lastIndexOf(')')
+            var depth = 0
+            for (i in close downTo 0) {
+                when (type[i]) { ')' -> depth++; '(' -> depth-- }
+                if (depth == 0) return type.substring(0, i).trim() to type.substring(close + 1).trim()
+            }
+            error("Not a function type: $type")
+        }
+    }
+}
