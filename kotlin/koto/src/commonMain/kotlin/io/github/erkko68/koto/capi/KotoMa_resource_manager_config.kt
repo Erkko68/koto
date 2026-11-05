@@ -76,9 +76,6 @@ internal external fun KotoMa_resource_manager_config_GetCustomDecodingBackendCou
 @ExternalSymbolName("KotoMa_resource_manager_config_SetCustomDecodingBackendCount")
 internal external fun KotoMa_resource_manager_config_SetCustomDecodingBackendCount(self: NativePointer, value: Int)
 
-@ExternalSymbolName("KotoMa_resource_manager_config_GetCustomDecodingBackendUserData")
-internal external fun KotoMa_resource_manager_config_GetCustomDecodingBackendUserData(self: NativePointer): NativePointer
-
 @ExternalSymbolName("KotoMa_resource_manager_config_GetResampling")
 internal external fun KotoMa_resource_manager_config_GetResampling(self: NativePointer, out: NativePointer)
 

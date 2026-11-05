@@ -11,8 +11,8 @@ extern "C" {
 // ma_bpf_node
 KotoMa_bpf_node* KotoMa_bpf_node_create(void);
 void KotoMa_bpf_node_destroy(KotoMa_bpf_node* self);
-// skipped ma_bpf_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_bpf_node::bpf: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_bpf_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_bpf_node::bpf: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

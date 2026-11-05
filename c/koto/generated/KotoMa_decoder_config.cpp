@@ -100,8 +100,4 @@ void KotoMa_decoder_config_SetCustomBackendCount(KotoMa_decoder_config* self, ui
     koto::cpp(self)->customBackendCount = static_cast<unsigned int>(value);
 }
 
-void* KotoMa_decoder_config_GetCustomBackendUserData(const KotoMa_decoder_config* self) {
-    return koto::cpp(self)->pCustomBackendUserData;
-}
-
 } // extern "C"

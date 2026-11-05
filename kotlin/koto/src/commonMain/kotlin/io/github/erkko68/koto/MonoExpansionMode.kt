@@ -8,7 +8,7 @@ enum class MonoExpansionMode(internal val value: Int) {
     DUPLICATE(0),
     AVERAGE(1),
     STEREO_ONLY(2),
-    DEFAULT(3);
+    DEFAULT(0);
 
     internal companion object {
         fun of(value: Int) = entries.first { it.value == value }

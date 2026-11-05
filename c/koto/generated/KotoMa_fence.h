@@ -11,8 +11,8 @@ extern "C" {
 // ma_fence
 KotoMa_fence* KotoMa_fence_create(void);
 void KotoMa_fence_destroy(KotoMa_fence* self);
-// skipped ma_fence::e: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_fence::counter: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_fence::e: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_fence::counter: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

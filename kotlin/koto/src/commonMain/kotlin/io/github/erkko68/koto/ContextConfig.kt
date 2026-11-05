@@ -22,9 +22,6 @@ class ContextConfig internal constructor(val contextConfigHandle: NativePointer,
         get() = KotoMa_context_config_GetThreadStackSize(contextConfigHandle)
         set(value) = KotoMa_context_config_SetThreadStackSize(contextConfigHandle, value)
 
-    val userData: NativePointer
-        get() = KotoMa_context_config_GetUserData(contextConfigHandle)
-
     var allocationCallbacks: AllocationCallbacks
         get() = run {
             val returned = AllocationCallbacks(KotoMa_allocation_callbacks_create(), owned = true)
@@ -33,18 +30,21 @@ class ContextConfig internal constructor(val contextConfigHandle: NativePointer,
         }
         set(value) = KotoMa_context_config_SetAllocationCallbacks(contextConfigHandle, value.allocationCallbacksHandle)
 
-    val dsoundHWnd: NativePointer
+    var dsoundHWnd: NativePointer
         get() = KotoMa_context_config_GetDsound_hWnd(contextConfigHandle)
+        set(value) = KotoMa_context_config_SetDsound_hWnd(contextConfigHandle, value)
 
     var alsaUseVerboseDeviceEnumeration: Boolean
         get() = KotoMa_context_config_GetAlsa_useVerboseDeviceEnumeration(contextConfigHandle)
         set(value) = KotoMa_context_config_SetAlsa_useVerboseDeviceEnumeration(contextConfigHandle, value)
 
-    val pulsePApplicationName: String?
+    var pulsePApplicationName: String?
         get() = stringFromInterop(KotoMa_context_config_GetPulse_pApplicationName(contextConfigHandle))
+        set(value) = interopScope { KotoMa_context_config_SetPulse_pApplicationName(contextConfigHandle, toInterop(value)) }
 
-    val pulsePServerName: String?
+    var pulsePServerName: String?
         get() = stringFromInterop(KotoMa_context_config_GetPulse_pServerName(contextConfigHandle))
+        set(value) = interopScope { KotoMa_context_config_SetPulse_pServerName(contextConfigHandle, toInterop(value)) }
 
     var pulseTryAutoSpawn: Boolean
         get() = KotoMa_context_config_GetPulse_tryAutoSpawn(contextConfigHandle)
@@ -66,8 +66,9 @@ class ContextConfig internal constructor(val contextConfigHandle: NativePointer,
         get() = KotoMa_context_config_GetCoreaudio_noAudioSessionDeactivate(contextConfigHandle)
         set(value) = KotoMa_context_config_SetCoreaudio_noAudioSessionDeactivate(contextConfigHandle, value)
 
-    val jackPClientName: String?
+    var jackPClientName: String?
         get() = stringFromInterop(KotoMa_context_config_GetJack_pClientName(contextConfigHandle))
+        set(value) = interopScope { KotoMa_context_config_SetJack_pClientName(contextConfigHandle, toInterop(value)) }
 
     var jackTryStartServer: Boolean
         get() = KotoMa_context_config_GetJack_tryStartServer(contextConfigHandle)

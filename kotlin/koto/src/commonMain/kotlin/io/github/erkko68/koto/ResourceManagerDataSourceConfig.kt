@@ -10,8 +10,9 @@ class ResourceManagerDataSourceConfig internal constructor(val resourceManagerDa
     override fun close() =
         closeOnce { KotoMa_resource_manager_data_source_config_destroy(resourceManagerDataSourceConfigHandle) }
 
-    val filePath: String?
+    var filePath: String?
         get() = stringFromInterop(KotoMa_resource_manager_data_source_config_GetFilePath(resourceManagerDataSourceConfigHandle))
+        set(value) = interopScope { KotoMa_resource_manager_data_source_config_SetFilePath(resourceManagerDataSourceConfigHandle, toInterop(value)) }
 
     var initialSeekPointInPCMFrames: Long
         get() = interopScope {

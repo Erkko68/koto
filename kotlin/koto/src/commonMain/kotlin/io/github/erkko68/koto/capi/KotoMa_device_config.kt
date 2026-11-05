@@ -7,9 +7,6 @@ import io.github.erkko68.koto.interop.NativePointer
 @ExternalSymbolName("KotoMa_device_config_create")
 internal external fun KotoMa_device_config_create(): NativePointer
 
-@ExternalSymbolName("KotoMa_device_config_destroy")
-internal external fun KotoMa_device_config_destroy(self: NativePointer)
-
 @ExternalSymbolName("KotoMa_device_config_GetDeviceType")
 internal external fun KotoMa_device_config_GetDeviceType(self: NativePointer): Int
 
@@ -69,9 +66,6 @@ internal external fun KotoMa_device_config_GetNoFixedSizedCallback(self: NativeP
 
 @ExternalSymbolName("KotoMa_device_config_SetNoFixedSizedCallback")
 internal external fun KotoMa_device_config_SetNoFixedSizedCallback(self: NativePointer, value: Int)
-
-@ExternalSymbolName("KotoMa_device_config_GetUserData")
-internal external fun KotoMa_device_config_GetUserData(self: NativePointer): NativePointer
 
 @ExternalSymbolName("KotoMa_device_config_GetResampling")
 internal external fun KotoMa_device_config_GetResampling(self: NativePointer, out: NativePointer)
@@ -220,8 +214,14 @@ internal external fun KotoMa_device_config_SetAlsa_noAutoResample(self: NativePo
 @ExternalSymbolName("KotoMa_device_config_GetPulse_pStreamNamePlayback")
 internal external fun KotoMa_device_config_GetPulse_pStreamNamePlayback(self: NativePointer): NativePointer
 
+@ExternalSymbolName("KotoMa_device_config_SetPulse_pStreamNamePlayback")
+internal external fun KotoMa_device_config_SetPulse_pStreamNamePlayback(self: NativePointer, value: NativePointer)
+
 @ExternalSymbolName("KotoMa_device_config_GetPulse_pStreamNameCapture")
 internal external fun KotoMa_device_config_GetPulse_pStreamNameCapture(self: NativePointer): NativePointer
+
+@ExternalSymbolName("KotoMa_device_config_SetPulse_pStreamNameCapture")
+internal external fun KotoMa_device_config_SetPulse_pStreamNameCapture(self: NativePointer, value: NativePointer)
 
 @ExternalSymbolName("KotoMa_device_config_GetPulse_channelMap")
 internal external fun KotoMa_device_config_GetPulse_channelMap(self: NativePointer): Int

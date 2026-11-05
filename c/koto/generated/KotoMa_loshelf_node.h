@@ -11,8 +11,8 @@ extern "C" {
 // ma_loshelf_node
 KotoMa_loshelf_node* KotoMa_loshelf_node_create(void);
 void KotoMa_loshelf_node_destroy(KotoMa_loshelf_node* self);
-// skipped ma_loshelf_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_loshelf_node::loshelf: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_loshelf_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_loshelf_node::loshelf: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

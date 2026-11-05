@@ -8,7 +8,7 @@ enum class ChannelMixMode(internal val value: Int) {
     RECTANGULAR(0),
     SIMPLE(1),
     CUSTOM_WEIGHTS(2),
-    DEFAULT(3);
+    DEFAULT(0);
 
     internal companion object {
         fun of(value: Int) = entries.first { it.value == value }

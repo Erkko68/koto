@@ -21,6 +21,16 @@ class Encoder internal constructor(val encoderHandle: NativePointer, owned: Bool
         }
 
     companion object {
+        fun init(onWrite: ((Encoder?, NativePointer, Int) -> Pair<Result, Int>)?, onSeek: ((Encoder?, Long, SeekOrigin) -> Result)?, config: EncoderConfig?): Encoder =
+            run {
+                val onWriteUser = if (onWrite == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> val returned = onWrite(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Encoder(it) }, readPointerSlot(args, 1), readSlot(args, 2).toInt()); writeSlot(result, returned.first.value.toLong()); writeSlot(readPointerSlot(args, 3), returned.second.toLong()) })
+                val onSeekUser = if (onSeek == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> val returned = onSeek(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Encoder(it) }, readSlot(args, 1), SeekOrigin.of(readSlot(args, 2).toInt())); writeSlot(result, returned.value.toLong()) })
+                val created = KotoMa_encoder_create()
+                checkResult(Koto_ma_encoder_init(Upcalls.function, onWriteUser, Upcalls.function, onSeekUser, config?.encoderConfigHandle ?: NullPointer, created)) { KotoMa_encoder_destroy(created) }
+                val nativeResult = Encoder(created, owned = true)
+                nativeResult
+            }
+
         fun initVfs(vfs: NativePointer, filePath: String?, config: EncoderConfig?): Encoder =
             interopScope {
                 val created = KotoMa_encoder_create()

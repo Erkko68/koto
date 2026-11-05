@@ -8,10 +8,6 @@ KotoMa_device_config* KotoMa_device_config_create(void) {
     return koto::c(new ma_device_config());
 }
 
-void KotoMa_device_config_destroy(KotoMa_device_config* self) {
-    delete koto::cpp(self);
-}
-
 KotoMa_device_type KotoMa_device_config_GetDeviceType(const KotoMa_device_config* self) {
     return static_cast<KotoMa_device_type>(koto::cpp(self)->deviceType);
 }
@@ -90,10 +86,6 @@ uint32_t KotoMa_device_config_GetNoFixedSizedCallback(const KotoMa_device_config
 
 void KotoMa_device_config_SetNoFixedSizedCallback(KotoMa_device_config* self, uint32_t value) {
     koto::cpp(self)->noFixedSizedCallback = static_cast<unsigned char>(value);
-}
-
-void* KotoMa_device_config_GetUserData(const KotoMa_device_config* self) {
-    return koto::cpp(self)->pUserData;
 }
 
 void KotoMa_device_config_GetResampling(const KotoMa_device_config* self, KotoMa_resampler_config* out) {
@@ -292,8 +284,16 @@ const char* KotoMa_device_config_GetPulse_pStreamNamePlayback(const KotoMa_devic
     return koto::cpp(self)->pulse.pStreamNamePlayback;
 }
 
+void KotoMa_device_config_SetPulse_pStreamNamePlayback(KotoMa_device_config* self, const char* value) {
+    koto::cpp(self)->pulse.pStreamNamePlayback = koto::keep(&koto::cpp(self)->pulse.pStreamNamePlayback, value);
+}
+
 const char* KotoMa_device_config_GetPulse_pStreamNameCapture(const KotoMa_device_config* self) {
     return koto::cpp(self)->pulse.pStreamNameCapture;
+}
+
+void KotoMa_device_config_SetPulse_pStreamNameCapture(KotoMa_device_config* self, const char* value) {
+    koto::cpp(self)->pulse.pStreamNameCapture = koto::keep(&koto::cpp(self)->pulse.pStreamNameCapture, value);
 }
 
 int32_t KotoMa_device_config_GetPulse_channelMap(const KotoMa_device_config* self) {

@@ -20,8 +20,7 @@ void KotoMa_audio_buffer_config_SetSampleRate(KotoMa_audio_buffer_config* self, 
 void KotoMa_audio_buffer_config_GetSizeInFrames(const KotoMa_audio_buffer_config* self, uint64_t* out);
 void KotoMa_audio_buffer_config_SetSizeInFrames(KotoMa_audio_buffer_config* self, uint64_t value);
 const void* KotoMa_audio_buffer_config_GetData(const KotoMa_audio_buffer_config* self);
-// TODO(handwritten) KotoMa_audio_buffer_config_SetData: const void * ma_audio_buffer_config::pData
-//     const void *: the struct would keep the caller's pointer
+void KotoMa_audio_buffer_config_SetData(KotoMa_audio_buffer_config* self, const void* value);
 void KotoMa_audio_buffer_config_GetAllocationCallbacks(const KotoMa_audio_buffer_config* self, KotoMa_allocation_callbacks* out);
 void KotoMa_audio_buffer_config_SetAllocationCallbacks(KotoMa_audio_buffer_config* self, const KotoMa_allocation_callbacks* value);
 

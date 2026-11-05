@@ -104,7 +104,7 @@ internal class KotlinValues(val c: CApi, private val config: ApiGenConfig, priva
      * leaves in each argument C++ takes by reference. The interop package's `NativeCallback` keeps it until C++ drops it.
      */
     private fun function(value: CValue.Function, name: String): Passed? {
-        val args = value.args.mapIndexed { i, a -> (type(a) ?: return null) to (fromSlot(a, i) ?: return null) }
+        val args = value.args.withIndex().filter { (_, a) -> !(a is CValue.InOut && a.written) }.map { (i, a) -> (type(a) ?: return null) to (fromSlot(a, i) ?: return null) }
         val outs = value.args.withIndex().filter { it.value is CValue.InOut }
         val parts = listOfNotNull(value.returns?.let { type(it) ?: return null }) + outs.map { type(it.value) ?: return null }
         val returns = when (parts.size) {
@@ -114,7 +114,7 @@ internal class KotlinValues(val c: CApi, private val config: ApiGenConfig, priva
             else -> return null
         }
         fun part(k: Int) = if (parts.size == 1) "returned" else "returned.${listOf("first", "second", "third")[k]}"
-        val stores = listOfNotNull(value.returns?.let { "writeSlot(result, ${toSlot(it, part(0)) ?: return null})" }) +
+        val stores = listOfNotNull(value.returns?.let { if (it == CValue.Opaque) "writePointerSlot(result, ${part(0)})" else "writeSlot(result, ${toSlot(it, part(0)) ?: return null})" }) +
             outs.mapIndexed { k, (i, a) -> toPointerSlot(a, i, part(parts.size - outs.size + k)) ?: return null }
         val call = "$name(${args.joinToString { it.second }})"
         val user = "${name.trim('`')}User"
@@ -251,9 +251,8 @@ internal class KotlinValues(val c: CApi, private val config: ApiGenConfig, priva
     }
 
     /** The Kotlin value of the [value] in slot [i] of an upcall's arguments, or null when no slot holds one. */
-    fun fromSlot(value: CValue, i: Int): String? {
+    fun fromSlot(value: CValue, i: Int, slot: String = "readSlot(args, $i)"): String? {
         val type = type(value) ?: return null
-        val slot = "readSlot(args, $i)"
         val pointer = "readPointerSlot(args, $i)"
         return when (value) {
             is CValue.Builtin -> when (value.c) {
@@ -271,7 +270,8 @@ internal class KotlinValues(val c: CApi, private val config: ApiGenConfig, priva
             // The slot points at it.
             is CValue.InOut -> when (val v = value.value) {
                 is CValue.Mirror -> fromSlot(v, i)
-                is CValue.Builtin -> "readFloats($pointer, 1).readF32(0)".takeIf { v.c == "float" }
+                // A number other than a float points at a 64-bit slot of its own.
+                is CValue.Builtin -> if (v.c == "float") "readFloats($pointer, 1).readF32(0)" else fromSlot(v, i, "readSlot($pointer, 0)")
                 else -> null
             }
             else -> null
@@ -281,7 +281,7 @@ internal class KotlinValues(val c: CApi, private val config: ApiGenConfig, priva
     /** The statement writing [expression] to what slot [i] of an upcall's arguments points at, a [value] C++ takes back. */
     fun toPointerSlot(value: CValue, i: Int, expression: String): String? = when (val v = (value as? CValue.InOut)?.value) {
         is CValue.Mirror -> "writeFloats(readPointerSlot(args, $i), $expression.toArray())".takeIf { v.element == "float" }
-        is CValue.Builtin -> "writeFloats(readPointerSlot(args, $i), floatArrayOf($expression))".takeIf { v.c == "float" }
+        is CValue.Builtin -> if (v.c == "float") "writeFloats(readPointerSlot(args, $i), floatArrayOf($expression))" else toSlot(v, expression)?.let { "writeSlot(readPointerSlot(args, $i), $it)" }
         else -> null
     }
 

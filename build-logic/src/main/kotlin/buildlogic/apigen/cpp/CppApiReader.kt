@@ -230,7 +230,9 @@ internal class CppApiReader(private val config: ApiGenConfig, private val workDi
         scopes.type(qualified)
         var next = BigInteger.ZERO
         val constants = node.children().filter { it["kind"] == "EnumConstantDecl" }.map { constant ->
-            val explicit = constant.children().firstOrNull { it["kind"] == "ConstantExpr" }?.get("value") as? String
+            // Through the cast to an unsigned underlying type, which clang adds for an enum with no negative values.
+            val explicit = generateSequence(constant.children().firstOrNull()) { if (it["kind"] == "ImplicitCastExpr") it.children().firstOrNull() else null }
+                .firstOrNull { it["kind"] == "ConstantExpr" }?.get("value") as? String
             val value = explicit?.let(::BigInteger) ?: next
             next = value + BigInteger.ONE
             constant["name"] as String to value

@@ -30,13 +30,6 @@ class Noise internal constructor(val noiseHandle: NativePointer, owned: Boolean 
         checkResult(Koto_ma_noise_set_type(noiseHandle, type.value))
 
     companion object {
-        fun initPreallocated(config: NoiseConfig?, heap: NativePointer): Noise =
-            run {
-                val created = KotoMa_noise_create()
-                checkResult(Koto_ma_noise_init_preallocated(config?.noiseConfigHandle ?: NullPointer, heap, created)) { KotoMa_noise_destroy(created) }
-                Noise(created, owned = true)
-            }
-
         fun init(config: NoiseConfig?, allocationCallbacks: AllocationCallbacks?): Noise =
             run {
                 val created = KotoMa_noise_create()

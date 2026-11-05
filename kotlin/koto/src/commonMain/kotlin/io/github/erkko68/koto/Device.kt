@@ -17,6 +17,9 @@ class Device internal constructor(val deviceHandle: NativePointer, owned: Boolea
     val log: Log?
         get() = Koto_ma_device_get_log(deviceHandle).takeIf { it != NullPointer }?.let { Log(it) }
 
+    fun getInfo(type: DeviceType, deviceInfo: DeviceInfo?) =
+        checkResult(Koto_ma_device_get_info(deviceHandle, type.value, deviceInfo?.deviceInfoHandle ?: NullPointer))
+
     fun start() =
         checkResult(Koto_ma_device_start(deviceHandle))
 

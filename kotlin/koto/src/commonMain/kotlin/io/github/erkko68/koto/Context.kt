@@ -14,6 +14,12 @@ class Context internal constructor(val contextHandle: NativePointer, owned: Bool
     val log: Log?
         get() = Koto_ma_context_get_log(contextHandle).takeIf { it != NullPointer }?.let { Log(it) }
 
+    fun enumerateDevices(callback: ((Context?, DeviceType, DeviceInfo?) -> Boolean)?) =
+        run {
+            val callbackUser = if (callback == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> val returned = callback(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Context(it) }, DeviceType.of(readSlot(args, 1).toInt()), readPointerSlot(args, 2).takeIf { it != NullPointer }?.let { DeviceInfo(it) }); writeSlot(result, if (returned) 1L else 0L) })
+            checkResult(Koto_ma_context_enumerate_devices(contextHandle, Upcalls.function, callbackUser))
+        }
+
     val isLoopbackSupported: Boolean
         get() = Koto_ma_context_is_loopback_supported(contextHandle)
 

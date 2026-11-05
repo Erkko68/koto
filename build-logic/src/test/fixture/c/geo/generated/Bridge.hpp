@@ -9,13 +9,39 @@
 #include <cstdlib>
 #include <cstring>
 #include <iterator>
+#include <map>
 #include <memory>
+#include <mutex>
 #include <optional>
+#include <string>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
 namespace geoc {
+
+// The strings structs keep, by the field's address: a copy of each one set, until it's set again or the struct goes
+// (forget). ponytail: a struct copied by value shares its original's copies; one per struct if one outlives it.
+inline std::mutex keptLock;
+inline std::map<const void*, std::shared_ptr<const void>> kept;
+
+template <class Char>
+const Char* keep(const void* field, const Char* text) {
+    std::lock_guard<std::mutex> lock(keptLock);
+    if (!text) {
+        kept.erase(field);
+        return nullptr;
+    }
+    auto copy = std::make_shared<const std::basic_string<Char>>(text);
+    kept[field] = copy;
+    return copy->c_str();
+}
+
+inline void forget(const void* self, size_t size) {
+    std::lock_guard<std::mutex> lock(keptLock);
+    const char* begin = static_cast<const char*>(self);
+    kept.erase(kept.lower_bound(begin), kept.lower_bound(begin + size));
+}
 
 // Called by a function whose C++ the target's headers leave out (#if guards around the declaration).
 [[noreturn]] inline void unavailable(const char* name) {

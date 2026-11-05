@@ -11,8 +11,8 @@ extern "C" {
 // ma_pulsewave
 KotoMa_pulsewave* KotoMa_pulsewave_create(void);
 void KotoMa_pulsewave_destroy(KotoMa_pulsewave* self);
-// skipped ma_pulsewave::waveform: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_pulsewave::config: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_pulsewave::waveform: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_pulsewave::config: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

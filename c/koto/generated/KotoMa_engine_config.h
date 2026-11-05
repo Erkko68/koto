@@ -10,7 +10,7 @@ extern "C" {
 
 // ma_engine_config
 KotoMa_engine_config* KotoMa_engine_config_create(void);
-void KotoMa_engine_config_destroy(KotoMa_engine_config* self);
+// handwritten in manual/ KotoMa_engine_config_destroy: ~ma_engine_config()
 KotoMa_resource_manager* KotoMa_engine_config_GetResourceManager(const KotoMa_engine_config* self);
 void KotoMa_engine_config_SetResourceManager(KotoMa_engine_config* self, KotoMa_resource_manager* value);
 KotoMa_context* KotoMa_engine_config_GetContext(const KotoMa_engine_config* self);
@@ -18,14 +18,12 @@ void KotoMa_engine_config_SetContext(KotoMa_engine_config* self, KotoMa_context*
 KotoMa_device* KotoMa_engine_config_GetDevice(const KotoMa_engine_config* self);
 void KotoMa_engine_config_SetDevice(KotoMa_engine_config* self, KotoMa_device* value);
 // skipped ma_engine_config::pPlaybackDeviceID: uses ma_device_id
-// TODO(handwritten) KotoMa_engine_config_GetDataCallback: ma_device_data_proc ma_engine_config::dataCallback
-//     void (*)(ma_device *, void *, const void *, ma_uint32): takes C++ types
-// TODO(handwritten) KotoMa_engine_config_SetDataCallback: ma_device_data_proc ma_engine_config::dataCallback
-//     void (*)(ma_device *, void *, const void *, ma_uint32): takes C++ types
-// TODO(handwritten) KotoMa_engine_config_GetNotificationCallback: ma_device_notification_proc ma_engine_config::notificationCallback
-//     void (*)(const ma_device_notification *): takes C++ types
-// TODO(handwritten) KotoMa_engine_config_SetNotificationCallback: ma_device_notification_proc ma_engine_config::notificationCallback
-//     void (*)(const ma_device_notification *): takes C++ types
+// skipped KotoMa_engine_config_GetDataCallback: ma_device_data_proc ma_engine_config::dataCallback
+//     void (*)(ma_device *, void *, const void *, ma_uint32): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_engine_config_SetDataCallback: ma_device_data_proc ma_engine_config::dataCallback
+// skipped KotoMa_engine_config_GetNotificationCallback: ma_device_notification_proc ma_engine_config::notificationCallback
+//     void (*)(const ma_device_notification *): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_engine_config_SetNotificationCallback: ma_device_notification_proc ma_engine_config::notificationCallback
 KotoMa_log* KotoMa_engine_config_GetLog(const KotoMa_engine_config* self);
 void KotoMa_engine_config_SetLog(KotoMa_engine_config* self, KotoMa_log* value);
 uint32_t KotoMa_engine_config_GetListenerCount(const KotoMa_engine_config* self);
@@ -56,13 +54,10 @@ KotoMa_mono_expansion_mode KotoMa_engine_config_GetMonoExpansionMode(const KotoM
 void KotoMa_engine_config_SetMonoExpansionMode(KotoMa_engine_config* self, KotoMa_mono_expansion_mode value);
 void* KotoMa_engine_config_GetResourceManagerVFS(const KotoMa_engine_config* self);
 void KotoMa_engine_config_SetResourceManagerVFS(KotoMa_engine_config* self, void* value);
-// TODO(handwritten) KotoMa_engine_config_GetOnProcess: ma_engine_process_proc ma_engine_config::onProcess
-//     void (*)(void *, float *, ma_uint64): takes C++ types
-// TODO(handwritten) KotoMa_engine_config_SetOnProcess: ma_engine_process_proc ma_engine_config::onProcess
-//     void (*)(void *, float *, ma_uint64): takes C++ types
-void* KotoMa_engine_config_GetProcessUserData(const KotoMa_engine_config* self);
-// TODO(handwritten) KotoMa_engine_config_SetProcessUserData: void * ma_engine_config::pProcessUserData
-//     void *: the struct would keep the caller's pointer
+// skipped KotoMa_engine_config_GetOnProcess: ma_engine_process_proc ma_engine_config::onProcess
+//     void (*)(void *, float *, ma_uint64): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_engine_config_SetOnProcess: ma_engine_process_proc ma_engine_config::onProcess
+// skipped ma_engine_config::pProcessUserData: ma_(device_config::pUserData|sound_config::pEndCallbackUserData|engine_config::pProcessUserData)
 void KotoMa_engine_config_GetResourceManagerResampling(const KotoMa_engine_config* self, KotoMa_resampler_config* out);
 void KotoMa_engine_config_SetResourceManagerResampling(KotoMa_engine_config* self, const KotoMa_resampler_config* value);
 void KotoMa_engine_config_GetPitchResampling(const KotoMa_engine_config* self, KotoMa_resampler_config* out);

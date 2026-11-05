@@ -13,6 +13,9 @@ internal external fun KotoMa_resource_manager_data_source_config_destroy(self: N
 @ExternalSymbolName("KotoMa_resource_manager_data_source_config_GetFilePath")
 internal external fun KotoMa_resource_manager_data_source_config_GetFilePath(self: NativePointer): NativePointer
 
+@ExternalSymbolName("KotoMa_resource_manager_data_source_config_SetFilePath")
+internal external fun KotoMa_resource_manager_data_source_config_SetFilePath(self: NativePointer, value: NativePointer)
+
 @ExternalSymbolName("KotoMa_resource_manager_data_source_config_GetInitialSeekPointInPCMFrames")
 internal external fun KotoMa_resource_manager_data_source_config_GetInitialSeekPointInPCMFrames(self: NativePointer, out: NativePointer)
 

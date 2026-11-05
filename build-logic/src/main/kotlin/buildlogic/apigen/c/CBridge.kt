@@ -22,6 +22,13 @@ class CBridge(
     val typedef: Pair<String, String>? = null,
     /** What the value is, for a stage wrapping the C API in typed code; null when [c] alone doesn't say how to. */
     val value: CValue? = null,
+    /**
+     * A C function pointer C passes as an `Upcall` and its user data: `manual/` writes the function, its trampoline,
+     * and where the library keeps that user data until it's done with it.
+     */
+    val trampoline: Boolean = false,
+    /** A parameter C doesn't take: the one before passes it, as its [extra] count. */
+    val implied: Boolean = false,
 ) {
     /** The [extra] parameters every bridge of a kind takes, by which a wrapper knows what to pass for them. */
     companion object {
@@ -70,8 +77,11 @@ sealed interface CValue {
      * a reference to release. A result [CBridge.out] is copied into one the caller created.
      */
     data class Handle(override val c: String, val nullable: Boolean, val owned: Boolean = false) : CValue
-    /** A pointer to one [value], which C++ takes by non-const reference: the callee reads what's there and writes its own. */
-    data class InOut(val value: CValue) : CValue {
+    /**
+     * A pointer to one [value], which C++ takes by non-const reference: the callee reads what's there and writes its own.
+     * [written]: an upcall's, which it only writes, so isn't passed.
+     */
+    data class InOut(val value: CValue, val written: Boolean = false) : CValue {
         override val c get() = value.c
     }
     /**
@@ -92,5 +102,8 @@ sealed interface CValue {
     }
 }
 
-/** Why a declaration stays hand-written; the generator leaves a comment saying so instead of code. */
-class Unsupported(reason: String) : Exception(reason)
+/**
+ * Why a declaration stays hand-written; the generator leaves a comment saying so instead of code. [skipped]: nothing
+ * outside C could use it, so it isn't to do.
+ */
+class Unsupported(reason: String, val skipped: Boolean = false) : Exception(reason)

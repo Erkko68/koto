@@ -20,8 +20,8 @@ class ResourceManager internal constructor(val resourceManagerHandle: NativePoin
     fun registerDecodedData(name: String?, data: NativePointer, frameCount: Long, format: Format, channels: Int, sampleRate: Int) =
         interopScope { checkResult(Koto_ma_resource_manager_register_decoded_data(resourceManagerHandle, toInterop(name), data, frameCount, format.value, channels, sampleRate)) }
 
-    fun registerEncodedData(name: String?, data: NativePointer, sizeInBytes: Int) =
-        interopScope { checkResult(Koto_ma_resource_manager_register_encoded_data(resourceManagerHandle, toInterop(name), data, sizeInBytes)) }
+    fun registerEncodedData(name: String?, data: ByteArray) =
+        interopScope { checkResult(Koto_ma_resource_manager_register_encoded_data(resourceManagerHandle, toInterop(name), toInterop(data), data.size)) }
 
     fun unregisterFile(filePath: String?) =
         interopScope { checkResult(Koto_ma_resource_manager_unregister_file(resourceManagerHandle, toInterop(filePath))) }

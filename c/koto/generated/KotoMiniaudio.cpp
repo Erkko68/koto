@@ -20,10 +20,6 @@ KotoMa_result Koto_ma_data_source_init(const KotoMa_data_source_config* pConfig,
     return static_cast<KotoMa_result>(::ma_data_source_init(koto::cpp(pConfig), pDataSource));
 }
 
-void Koto_ma_data_source_uninit(void* pDataSource) {
-    ::ma_data_source_uninit(pDataSource);
-}
-
 KotoMa_result Koto_ma_data_source_read_pcm_frames(void* pDataSource, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead) {
     return static_cast<KotoMa_result>(::ma_data_source_read_pcm_frames(pDataSource, pFramesOut, static_cast<unsigned long long>(frameCount), pFramesRead));
 }
@@ -118,14 +114,6 @@ KotoMa_result Koto_ma_audio_buffer_init_copy(const KotoMa_audio_buffer_config* p
 
 KotoMa_result Koto_ma_audio_buffer_alloc_and_init(const KotoMa_audio_buffer_config* pConfig, KotoMa_audio_buffer** ppAudioBuffer) {
     return static_cast<KotoMa_result>(::ma_audio_buffer_alloc_and_init(koto::cpp(pConfig), reinterpret_cast<ma_audio_buffer**>(ppAudioBuffer)));
-}
-
-void Koto_ma_audio_buffer_uninit(KotoMa_audio_buffer* pAudioBuffer) {
-    ::ma_audio_buffer_uninit(koto::cpp(pAudioBuffer));
-}
-
-void Koto_ma_audio_buffer_uninit_and_free(KotoMa_audio_buffer* pAudioBuffer) {
-    ::ma_audio_buffer_uninit_and_free(koto::cpp(pAudioBuffer));
 }
 
 void Koto_ma_audio_buffer_read_pcm_frames(KotoMa_audio_buffer* pAudioBuffer, void* pFramesOut, uint64_t frameCount, bool loop, uint64_t* out) {
@@ -252,30 +240,6 @@ void Koto_ma_device_config_init(KotoMa_device_type deviceType, KotoMa_device_con
 #endif
 }
 
-KotoMa_result Koto_ma_device_init(KotoMa_context* pContext, const KotoMa_device_config* pConfig, KotoMa_device* pDevice) {
-#if !defined(MA_NO_DEVICE_IO)
-    return static_cast<KotoMa_result>(::ma_device_init(koto::cpp(pContext), koto::cpp(pConfig), koto::cpp(pDevice)));
-#else
-    koto::unavailable("Koto_ma_device_init");
-#endif
-}
-
-KotoMa_result Koto_ma_device_init_ex(const KotoMa_backend* backends, uint32_t backendCount, const KotoMa_context_config* pContextConfig, const KotoMa_device_config* pConfig, KotoMa_device* pDevice) {
-#if !defined(MA_NO_DEVICE_IO)
-    return static_cast<KotoMa_result>(::ma_device_init_ex(reinterpret_cast<const ma_backend*>(backends), static_cast<unsigned int>(backendCount), koto::cpp(pContextConfig), koto::cpp(pConfig), koto::cpp(pDevice)));
-#else
-    koto::unavailable("Koto_ma_device_init_ex");
-#endif
-}
-
-void Koto_ma_device_uninit(KotoMa_device* pDevice) {
-#if !defined(MA_NO_DEVICE_IO)
-    ::ma_device_uninit(koto::cpp(pDevice));
-#else
-    koto::unavailable("Koto_ma_device_uninit");
-#endif
-}
-
 KotoMa_context* Koto_ma_device_get_context(KotoMa_device* pDevice) {
 #if !defined(MA_NO_DEVICE_IO)
     return koto::c(::ma_device_get_context(koto::cpp(pDevice)));
@@ -289,6 +253,14 @@ KotoMa_log* Koto_ma_device_get_log(KotoMa_device* pDevice) {
     return koto::c(::ma_device_get_log(koto::cpp(pDevice)));
 #else
     koto::unavailable("Koto_ma_device_get_log");
+#endif
+}
+
+KotoMa_result Koto_ma_device_get_info(KotoMa_device* pDevice, KotoMa_device_type type, KotoMa_device_info* pDeviceInfo) {
+#if !defined(MA_NO_DEVICE_IO)
+    return static_cast<KotoMa_result>(::ma_device_get_info(koto::cpp(pDevice), static_cast<ma_device_type>(type), koto::cpp(pDeviceInfo)));
+#else
+    koto::unavailable("Koto_ma_device_get_info");
 #endif
 }
 
@@ -380,14 +352,6 @@ void Koto_ma_decoder_config_init_default(KotoMa_decoder_config* out) {
 #endif
 }
 
-KotoMa_result Koto_ma_decoder_init_memory(const void* pData, uint32_t dataSize, const KotoMa_decoder_config* pConfig, KotoMa_decoder* pDecoder) {
-#if !defined(MA_NO_DECODING)
-    return static_cast<KotoMa_result>(::ma_decoder_init_memory(pData, static_cast<size_t>(dataSize), koto::cpp(pConfig), koto::cpp(pDecoder)));
-#else
-    koto::unavailable("Koto_ma_decoder_init_memory");
-#endif
-}
-
 KotoMa_result Koto_ma_decoder_init_vfs(void* pVFS, const char* pFilePath, const KotoMa_decoder_config* pConfig, KotoMa_decoder* pDecoder) {
 #if !defined(MA_NO_DECODING)
     return static_cast<KotoMa_result>(::ma_decoder_init_vfs(pVFS, pFilePath, koto::cpp(pConfig), koto::cpp(pDecoder)));
@@ -401,14 +365,6 @@ KotoMa_result Koto_ma_decoder_init_file(const char* pFilePath, const KotoMa_deco
     return static_cast<KotoMa_result>(::ma_decoder_init_file(pFilePath, koto::cpp(pConfig), koto::cpp(pDecoder)));
 #else
     koto::unavailable("Koto_ma_decoder_init_file");
-#endif
-}
-
-KotoMa_result Koto_ma_decoder_uninit(KotoMa_decoder* pDecoder) {
-#if !defined(MA_NO_DECODING)
-    return static_cast<KotoMa_result>(::ma_decoder_uninit(koto::cpp(pDecoder)));
-#else
-    koto::unavailable("Koto_ma_decoder_uninit");
 #endif
 }
 
@@ -484,14 +440,6 @@ KotoMa_result Koto_ma_encoder_init_file(const char* pFilePath, const KotoMa_enco
 #endif
 }
 
-void Koto_ma_encoder_uninit(KotoMa_encoder* pEncoder) {
-#if !defined(MA_NO_ENCODING)
-    ::ma_encoder_uninit(koto::cpp(pEncoder));
-#else
-    koto::unavailable("Koto_ma_encoder_uninit");
-#endif
-}
-
 KotoMa_result Koto_ma_encoder_write_pcm_frames(KotoMa_encoder* pEncoder, const void* pFramesIn, uint64_t frameCount, unsigned long long* pFramesWritten) {
 #if !defined(MA_NO_ENCODING)
     return static_cast<KotoMa_result>(::ma_encoder_write_pcm_frames(koto::cpp(pEncoder), pFramesIn, static_cast<unsigned long long>(frameCount), pFramesWritten));
@@ -513,14 +461,6 @@ KotoMa_result Koto_ma_waveform_init(const KotoMa_waveform_config* pConfig, KotoM
     return static_cast<KotoMa_result>(::ma_waveform_init(koto::cpp(pConfig), koto::cpp(pWaveform)));
 #else
     koto::unavailable("Koto_ma_waveform_init");
-#endif
-}
-
-void Koto_ma_waveform_uninit(KotoMa_waveform* pWaveform) {
-#if !defined(MA_NO_GENERATION)
-    ::ma_waveform_uninit(koto::cpp(pWaveform));
-#else
-    koto::unavailable("Koto_ma_waveform_uninit");
 #endif
 }
 
@@ -588,14 +528,6 @@ KotoMa_result Koto_ma_pulsewave_init(const KotoMa_pulsewave_config* pConfig, Kot
 #endif
 }
 
-void Koto_ma_pulsewave_uninit(KotoMa_pulsewave* pWaveform) {
-#if !defined(MA_NO_GENERATION)
-    ::ma_pulsewave_uninit(koto::cpp(pWaveform));
-#else
-    koto::unavailable("Koto_ma_pulsewave_uninit");
-#endif
-}
-
 KotoMa_result Koto_ma_pulsewave_read_pcm_frames(KotoMa_pulsewave* pWaveform, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead) {
 #if !defined(MA_NO_GENERATION)
     return static_cast<KotoMa_result>(::ma_pulsewave_read_pcm_frames(koto::cpp(pWaveform), pFramesOut, static_cast<unsigned long long>(frameCount), pFramesRead));
@@ -652,27 +584,11 @@ void Koto_ma_noise_config_init(KotoMa_format format, uint32_t channels, KotoMa_n
 #endif
 }
 
-KotoMa_result Koto_ma_noise_init_preallocated(const KotoMa_noise_config* pConfig, void* pHeap, KotoMa_noise* pNoise) {
-#if !defined(MA_NO_GENERATION)
-    return static_cast<KotoMa_result>(::ma_noise_init_preallocated(koto::cpp(pConfig), pHeap, koto::cpp(pNoise)));
-#else
-    koto::unavailable("Koto_ma_noise_init_preallocated");
-#endif
-}
-
 KotoMa_result Koto_ma_noise_init(const KotoMa_noise_config* pConfig, const KotoMa_allocation_callbacks* pAllocationCallbacks, KotoMa_noise* pNoise) {
 #if !defined(MA_NO_GENERATION)
     return static_cast<KotoMa_result>(::ma_noise_init(koto::cpp(pConfig), koto::cpp(pAllocationCallbacks), koto::cpp(pNoise)));
 #else
     koto::unavailable("Koto_ma_noise_init");
-#endif
-}
-
-void Koto_ma_noise_uninit(KotoMa_noise* pNoise, const KotoMa_allocation_callbacks* pAllocationCallbacks) {
-#if !defined(MA_NO_GENERATION)
-    ::ma_noise_uninit(koto::cpp(pNoise), koto::cpp(pAllocationCallbacks));
-#else
-    koto::unavailable("Koto_ma_noise_uninit");
 #endif
 }
 
@@ -732,14 +648,6 @@ KotoMa_result Koto_ma_resource_manager_init(const KotoMa_resource_manager_config
 #endif
 }
 
-void Koto_ma_resource_manager_uninit(KotoMa_resource_manager* pResourceManager) {
-#if !defined(MA_NO_RESOURCE_MANAGER)
-    ::ma_resource_manager_uninit(koto::cpp(pResourceManager));
-#else
-    koto::unavailable("Koto_ma_resource_manager_uninit");
-#endif
-}
-
 KotoMa_log* Koto_ma_resource_manager_get_log(KotoMa_resource_manager* pResourceManager) {
 #if !defined(MA_NO_RESOURCE_MANAGER)
     return koto::c(::ma_resource_manager_get_log(koto::cpp(pResourceManager)));
@@ -753,22 +661,6 @@ KotoMa_result Koto_ma_resource_manager_register_file(KotoMa_resource_manager* pR
     return static_cast<KotoMa_result>(::ma_resource_manager_register_file(koto::cpp(pResourceManager), pFilePath, static_cast<unsigned int>(flags)));
 #else
     koto::unavailable("Koto_ma_resource_manager_register_file");
-#endif
-}
-
-KotoMa_result Koto_ma_resource_manager_register_decoded_data(KotoMa_resource_manager* pResourceManager, const char* pName, const void* pData, uint64_t frameCount, KotoMa_format format, uint32_t channels, uint32_t sampleRate) {
-#if !defined(MA_NO_RESOURCE_MANAGER)
-    return static_cast<KotoMa_result>(::ma_resource_manager_register_decoded_data(koto::cpp(pResourceManager), pName, pData, static_cast<unsigned long long>(frameCount), static_cast<ma_format>(format), static_cast<unsigned int>(channels), static_cast<unsigned int>(sampleRate)));
-#else
-    koto::unavailable("Koto_ma_resource_manager_register_decoded_data");
-#endif
-}
-
-KotoMa_result Koto_ma_resource_manager_register_encoded_data(KotoMa_resource_manager* pResourceManager, const char* pName, const void* pData, uint32_t sizeInBytes) {
-#if !defined(MA_NO_RESOURCE_MANAGER)
-    return static_cast<KotoMa_result>(::ma_resource_manager_register_encoded_data(koto::cpp(pResourceManager), pName, pData, static_cast<size_t>(sizeInBytes)));
-#else
-    koto::unavailable("Koto_ma_resource_manager_register_encoded_data");
 #endif
 }
 
@@ -1276,22 +1168,6 @@ void Koto_ma_engine_config_init(KotoMa_engine_config* out) {
 #endif
 }
 
-KotoMa_result Koto_ma_engine_init(const KotoMa_engine_config* pConfig, KotoMa_engine* pEngine) {
-#if !defined(MA_NO_ENGINE) && !defined(MA_NO_NODE_GRAPH)
-    return static_cast<KotoMa_result>(::ma_engine_init(koto::cpp(pConfig), koto::cpp(pEngine)));
-#else
-    koto::unavailable("Koto_ma_engine_init");
-#endif
-}
-
-void Koto_ma_engine_uninit(KotoMa_engine* pEngine) {
-#if !defined(MA_NO_ENGINE) && !defined(MA_NO_NODE_GRAPH)
-    ::ma_engine_uninit(koto::cpp(pEngine));
-#else
-    koto::unavailable("Koto_ma_engine_uninit");
-#endif
-}
-
 KotoMa_result Koto_ma_engine_read_pcm_frames(KotoMa_engine* pEngine, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead) {
 #if !defined(MA_NO_ENGINE) && !defined(MA_NO_NODE_GRAPH)
     return static_cast<KotoMa_result>(::ma_engine_read_pcm_frames(koto::cpp(pEngine), pFramesOut, static_cast<unsigned long long>(frameCount), pFramesRead));
@@ -1593,22 +1469,6 @@ KotoMa_result Koto_ma_sound_init_from_data_source(KotoMa_engine* pEngine, void* 
     return static_cast<KotoMa_result>(::ma_sound_init_from_data_source(koto::cpp(pEngine), pDataSource, static_cast<unsigned int>(flags), koto::cpp(pGroup), koto::cpp(pSound)));
 #else
     koto::unavailable("Koto_ma_sound_init_from_data_source");
-#endif
-}
-
-KotoMa_result Koto_ma_sound_init_ex(KotoMa_engine* pEngine, const KotoMa_sound_config* pConfig, KotoMa_sound* pSound) {
-#if !defined(MA_NO_ENGINE) && !defined(MA_NO_NODE_GRAPH)
-    return static_cast<KotoMa_result>(::ma_sound_init_ex(koto::cpp(pEngine), koto::cpp(pConfig), koto::cpp(pSound)));
-#else
-    koto::unavailable("Koto_ma_sound_init_ex");
-#endif
-}
-
-void Koto_ma_sound_uninit(KotoMa_sound* pSound) {
-#if !defined(MA_NO_ENGINE) && !defined(MA_NO_NODE_GRAPH)
-    ::ma_sound_uninit(koto::cpp(pSound));
-#else
-    koto::unavailable("Koto_ma_sound_uninit");
 #endif
 }
 

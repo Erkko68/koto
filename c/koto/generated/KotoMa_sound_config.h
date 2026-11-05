@@ -10,14 +10,10 @@ extern "C" {
 
 // ma_sound_config
 KotoMa_sound_config* KotoMa_sound_config_create(void);
-void KotoMa_sound_config_destroy(KotoMa_sound_config* self);
+// handwritten in manual/ KotoMa_sound_config_destroy: ~ma_sound_config()
 const char* KotoMa_sound_config_GetFilePath(const KotoMa_sound_config* self);
-// TODO(handwritten) KotoMa_sound_config_SetFilePath: const char * ma_sound_config::pFilePath
-//     const char *: the struct would keep the caller's pointer
-// TODO(handwritten) KotoMa_sound_config_GetFilePathW: const wchar_t * ma_sound_config::pFilePathW
-//     const wchar_t *: unresolved
-// TODO(handwritten) KotoMa_sound_config_SetFilePathW: const wchar_t * ma_sound_config::pFilePathW
-//     const wchar_t *: unresolved
+void KotoMa_sound_config_SetFilePath(KotoMa_sound_config* self, const char* value);
+// skipped ma_sound_config::pFilePathW: ma_\w+::pFilePathW
 void* KotoMa_sound_config_GetDataSource(const KotoMa_sound_config* self);
 void KotoMa_sound_config_SetDataSource(KotoMa_sound_config* self, void* value);
 void* KotoMa_sound_config_GetInitialAttachment(const KotoMa_sound_config* self);
@@ -44,13 +40,10 @@ void KotoMa_sound_config_GetLoopPointBegInPCMFrames(const KotoMa_sound_config* s
 void KotoMa_sound_config_SetLoopPointBegInPCMFrames(KotoMa_sound_config* self, uint64_t value);
 void KotoMa_sound_config_GetLoopPointEndInPCMFrames(const KotoMa_sound_config* self, uint64_t* out);
 void KotoMa_sound_config_SetLoopPointEndInPCMFrames(KotoMa_sound_config* self, uint64_t value);
-// TODO(handwritten) KotoMa_sound_config_GetEndCallback: ma_sound_end_proc ma_sound_config::endCallback
-//     void (*)(void *, ma_sound *): takes C++ types
-// TODO(handwritten) KotoMa_sound_config_SetEndCallback: ma_sound_end_proc ma_sound_config::endCallback
-//     void (*)(void *, ma_sound *): takes C++ types
-void* KotoMa_sound_config_GetEndCallbackUserData(const KotoMa_sound_config* self);
-// TODO(handwritten) KotoMa_sound_config_SetEndCallbackUserData: void * ma_sound_config::pEndCallbackUserData
-//     void *: the struct would keep the caller's pointer
+// skipped KotoMa_sound_config_GetEndCallback: ma_sound_end_proc ma_sound_config::endCallback
+//     void (*)(void *, ma_sound *): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_sound_config_SetEndCallback: ma_sound_end_proc ma_sound_config::endCallback
+// skipped ma_sound_config::pEndCallbackUserData: ma_(device_config::pUserData|sound_config::pEndCallbackUserData|engine_config::pProcessUserData)
 void KotoMa_sound_config_GetPitchResampling(const KotoMa_sound_config* self, KotoMa_resampler_config* out);
 void KotoMa_sound_config_SetPitchResampling(KotoMa_sound_config* self, const KotoMa_resampler_config* value);
 // skipped ma_sound_config::initNotifications: uses ma_resource_manager_pipeline_notifications

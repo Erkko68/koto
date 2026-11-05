@@ -11,8 +11,8 @@ extern "C" {
 // ma_peak_node
 KotoMa_peak_node* KotoMa_peak_node_create(void);
 void KotoMa_peak_node_destroy(KotoMa_peak_node* self);
-// skipped ma_peak_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_peak_node::peak: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_peak_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_peak_node::peak: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

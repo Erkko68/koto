@@ -61,6 +61,7 @@ actual object Upcalls {
 actual fun readSlot(args: NativePointer, index: Int): Long = KotoJni.getLong(args + index * 8L)
 actual fun readPointerSlot(args: NativePointer, index: Int): NativePointer = readSlot(args, index)
 actual fun writeSlot(result: NativePointer, value: Long) = KotoJni.putLong(result, value)
+actual fun writePointerSlot(result: NativePointer, value: NativePointer) = writeSlot(result, value)
 
 actual fun readFloats(ptr: NativePointer, count: Int): FloatArray =
     FloatArray(count).also { if (count > 0) KotoJni.buffer(ptr, count * 4).asFloatBuffer().get(it) }

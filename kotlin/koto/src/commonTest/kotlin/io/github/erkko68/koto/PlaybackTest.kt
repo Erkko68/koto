@@ -28,22 +28,21 @@ class PlaybackTest {
         return bytes.toByteArray()
     }
 
-    /** [block] with a sound of [sine], which decodes from memory only valid inside `interopScope`. */
-    private fun play(block: InteropScope.(Engine, Sound, Decoder) -> Unit) {
+    /** An engine mixing for no device, which [mix] reads. */
+    private fun engine(): Engine {
         loadNativeLibrary()
-        val engine = EngineConfig.init().use { config ->
+        return EngineConfig.init().use { config ->
             config.noDevice = true
             config.channels = 2
             config.sampleRate = RATE
             Engine.init(config)
         }
-        val wav = sine()
-        engine.use {
-            interopScope {
-                Decoder.initMemory(toInterop(wav), wav.size, null).use { decoder ->
-                    Sound.initFromDataSource(it, decoder.decoderHandle, 0, null).use { sound -> block(it, sound, decoder) }
-                }
-            }
+    }
+
+    /** [block] with a sound of [sine], decoded from the decoder's own copy of the bytes. */
+    private fun play(block: InteropScope.(Engine, Sound, Decoder) -> Unit) = engine().use {
+        Decoder.initMemory(sine(), null).use { decoder ->
+            Sound.initFromDataSource(it, decoder.decoderHandle, 0, null).use { sound -> interopScope { block(it, sound, decoder) } }
         }
     }
 
@@ -111,5 +110,61 @@ class PlaybackTest {
         repeat(30) { mix(engine, 2048) } // A little over the second it lasts.
         assertTrue(sound.atEnd())
         assertFalse(sound.isPlaying)
+    }
+
+    @Test
+    fun theEndCallbackRunsOnceAtTheEnd() = play { engine, sound, _ ->
+        var ended = 0
+        sound.setEndCallback { ended++ }
+        sound.start()
+        repeat(20) { mix(engine, 2048) }
+        assertEquals(0, ended)
+        repeat(10) { mix(engine, 2048) }
+        assertEquals(1, ended)
+    }
+
+    @Test
+    fun aReplacedEndCallbackIsntCalled() = play { engine, sound, _ ->
+        var first = 0
+        var second = 0
+        sound.setEndCallback { first++ }
+        sound.setEndCallback { second++ }
+        sound.start()
+        repeat(30) { mix(engine, 2048) }
+        assertEquals(0 to 1, first to second)
+    }
+
+    @Test
+    fun aSoundPlaysTheBytesRegisteredUnderItsName() = engine().use { engine ->
+        engine.resourceManager!!.registerEncodedData("sine.wav", sine())
+        Sound.initFromFile(engine, "sine.wav", 0, null, null).use { sound ->
+            sound.start()
+            val (left, right) = interopScope { mix(engine, 4800) }
+            assertTrue(left > 0.1 && right > 0.1, "silent: $left, $right")
+        }
+    }
+
+    /** A tenth of a second of 440 Hz, stereo f32 frames. */
+    private fun sineFrames() = FloatArray(RATE / 10 * 2) { (sin(2 * PI * 440 * (it / 2) / RATE) * 0.5).toFloat() }
+
+    @Test
+    fun aSoundPlaysTheFramesRegisteredUnderItsName() = engine().use { engine ->
+        engine.resourceManager!!.registerDecodedData("sine", sineFrames(), 2, RATE)
+        Sound.initFromFile(engine, "sine", 0, null, null).use { sound ->
+            sound.start()
+            val (left, right) = interopScope { mix(engine, 2400) }
+            assertTrue(left > 0.1 && right > 0.1, "silent: $left, $right")
+        }
+    }
+
+    @Test
+    fun anAudioBufferPlaysItsCopyOfTheFrames() = engine().use { engine ->
+        AudioBuffer.initCopy(sineFrames(), 2).use { buffer ->
+            Sound.initFromDataSource(engine, buffer.audioBufferHandle, 0, null).use { sound ->
+                sound.start()
+                val (left, right) = interopScope { mix(engine, 2400) }
+                assertTrue(left > 0.1 && right > 0.1, "silent: $left, $right")
+            }
+        }
     }
 }

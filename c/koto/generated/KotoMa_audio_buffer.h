@@ -11,10 +11,10 @@ extern "C" {
 // ma_audio_buffer
 KotoMa_audio_buffer* KotoMa_audio_buffer_create(void);
 void KotoMa_audio_buffer_destroy(KotoMa_audio_buffer* self);
-// skipped ma_audio_buffer::ref: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_audio_buffer::allocationCallbacks: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_audio_buffer::ownsData: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_audio_buffer::_pExtraData: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_audio_buffer::ref: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_audio_buffer::allocationCallbacks: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_audio_buffer::ownsData: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_audio_buffer::_pExtraData: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

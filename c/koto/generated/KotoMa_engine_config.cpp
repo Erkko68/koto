@@ -8,10 +8,6 @@ KotoMa_engine_config* KotoMa_engine_config_create(void) {
     return koto::c(new ma_engine_config());
 }
 
-void KotoMa_engine_config_destroy(KotoMa_engine_config* self) {
-    delete koto::cpp(self);
-}
-
 KotoMa_resource_manager* KotoMa_engine_config_GetResourceManager(const KotoMa_engine_config* self) {
     return koto::c(koto::cpp(self)->pResourceManager);
 }
@@ -154,10 +150,6 @@ void* KotoMa_engine_config_GetResourceManagerVFS(const KotoMa_engine_config* sel
 
 void KotoMa_engine_config_SetResourceManagerVFS(KotoMa_engine_config* self, void* value) {
     koto::cpp(self)->pResourceManagerVFS = value;
-}
-
-void* KotoMa_engine_config_GetProcessUserData(const KotoMa_engine_config* self) {
-    return koto::cpp(self)->pProcessUserData;
 }
 
 void KotoMa_engine_config_GetResourceManagerResampling(const KotoMa_engine_config* self, KotoMa_resampler_config* out) {

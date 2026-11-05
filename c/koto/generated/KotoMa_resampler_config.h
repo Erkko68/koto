@@ -22,9 +22,7 @@ void KotoMa_resampler_config_SetSampleRateOut(KotoMa_resampler_config* self, uin
 KotoMa_resample_algorithm KotoMa_resampler_config_GetAlgorithm(const KotoMa_resampler_config* self);
 void KotoMa_resampler_config_SetAlgorithm(KotoMa_resampler_config* self, KotoMa_resample_algorithm value);
 // skipped ma_resampler_config::pBackendVTable: uses ma_resampling_backend_vtable
-void* KotoMa_resampler_config_GetBackendUserData(const KotoMa_resampler_config* self);
-// TODO(handwritten) KotoMa_resampler_config_SetBackendUserData: void * ma_resampler_config::pBackendUserData
-//     void *: the struct would keep the caller's pointer
+// skipped ma_resampler_config::pBackendUserData: ma_(context_config::pUserData|decoder_config::pCustomBackendUserData|resource_manager_config::pCustomDecodingBackendUserData|resampler_config::pBackendUserData)
 uint32_t KotoMa_resampler_config_GetLinear_lpfOrder(const KotoMa_resampler_config* self);
 void KotoMa_resampler_config_SetLinear_lpfOrder(KotoMa_resampler_config* self, uint32_t value);
 

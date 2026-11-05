@@ -10,7 +10,7 @@ extern "C" {
 
 // ma_device_config
 KotoMa_device_config* KotoMa_device_config_create(void);
-void KotoMa_device_config_destroy(KotoMa_device_config* self);
+// handwritten in manual/ KotoMa_device_config_destroy: ~ma_device_config()
 KotoMa_device_type KotoMa_device_config_GetDeviceType(const KotoMa_device_config* self);
 void KotoMa_device_config_SetDeviceType(KotoMa_device_config* self, KotoMa_device_type value);
 uint32_t KotoMa_device_config_GetSampleRate(const KotoMa_device_config* self);
@@ -31,21 +31,16 @@ uint32_t KotoMa_device_config_GetNoDisableDenormals(const KotoMa_device_config* 
 void KotoMa_device_config_SetNoDisableDenormals(KotoMa_device_config* self, uint32_t value);
 uint32_t KotoMa_device_config_GetNoFixedSizedCallback(const KotoMa_device_config* self);
 void KotoMa_device_config_SetNoFixedSizedCallback(KotoMa_device_config* self, uint32_t value);
-// TODO(handwritten) KotoMa_device_config_GetDataCallback: ma_device_data_proc ma_device_config::dataCallback
-//     void (*)(ma_device *, void *, const void *, ma_uint32): takes C++ types
-// TODO(handwritten) KotoMa_device_config_SetDataCallback: ma_device_data_proc ma_device_config::dataCallback
-//     void (*)(ma_device *, void *, const void *, ma_uint32): takes C++ types
-// TODO(handwritten) KotoMa_device_config_GetNotificationCallback: ma_device_notification_proc ma_device_config::notificationCallback
-//     void (*)(const ma_device_notification *): takes C++ types
-// TODO(handwritten) KotoMa_device_config_SetNotificationCallback: ma_device_notification_proc ma_device_config::notificationCallback
-//     void (*)(const ma_device_notification *): takes C++ types
-// TODO(handwritten) KotoMa_device_config_GetStopCallback: ma_stop_proc ma_device_config::stopCallback
-//     void (*)(ma_device *): takes C++ types
-// TODO(handwritten) KotoMa_device_config_SetStopCallback: ma_stop_proc ma_device_config::stopCallback
-//     void (*)(ma_device *): takes C++ types
-void* KotoMa_device_config_GetUserData(const KotoMa_device_config* self);
-// TODO(handwritten) KotoMa_device_config_SetUserData: void * ma_device_config::pUserData
-//     void *: the struct would keep the caller's pointer
+// skipped KotoMa_device_config_GetDataCallback: ma_device_data_proc ma_device_config::dataCallback
+//     void (*)(ma_device *, void *, const void *, ma_uint32): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_device_config_SetDataCallback: ma_device_data_proc ma_device_config::dataCallback
+// skipped KotoMa_device_config_GetNotificationCallback: ma_device_notification_proc ma_device_config::notificationCallback
+//     void (*)(const ma_device_notification *): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_device_config_SetNotificationCallback: ma_device_notification_proc ma_device_config::notificationCallback
+// skipped KotoMa_device_config_GetStopCallback: ma_stop_proc ma_device_config::stopCallback
+//     void (*)(ma_device *): a C function, which nothing outside C calls
+// handwritten in manual/ KotoMa_device_config_SetStopCallback: ma_stop_proc ma_device_config::stopCallback
+// skipped ma_device_config::pUserData: ma_(device_config::pUserData|sound_config::pEndCallbackUserData|engine_config::pProcessUserData)
 void KotoMa_device_config_GetResampling(const KotoMa_device_config* self, KotoMa_resampler_config* out);
 void KotoMa_device_config_SetResampling(KotoMa_device_config* self, const KotoMa_resampler_config* value);
 // skipped ma_device_config::playback.pDeviceID: uses ma_device_id
@@ -97,11 +92,9 @@ void KotoMa_device_config_SetAlsa_noAutoChannels(KotoMa_device_config* self, boo
 bool KotoMa_device_config_GetAlsa_noAutoResample(const KotoMa_device_config* self);
 void KotoMa_device_config_SetAlsa_noAutoResample(KotoMa_device_config* self, bool value);
 const char* KotoMa_device_config_GetPulse_pStreamNamePlayback(const KotoMa_device_config* self);
-// TODO(handwritten) KotoMa_device_config_SetPulse_pStreamNamePlayback: const char * ma_device_config::pulse.pStreamNamePlayback
-//     const char *: the struct would keep the caller's pointer
+void KotoMa_device_config_SetPulse_pStreamNamePlayback(KotoMa_device_config* self, const char* value);
 const char* KotoMa_device_config_GetPulse_pStreamNameCapture(const KotoMa_device_config* self);
-// TODO(handwritten) KotoMa_device_config_SetPulse_pStreamNameCapture: const char * ma_device_config::pulse.pStreamNameCapture
-//     const char *: the struct would keep the caller's pointer
+void KotoMa_device_config_SetPulse_pStreamNameCapture(KotoMa_device_config* self, const char* value);
 int32_t KotoMa_device_config_GetPulse_channelMap(const KotoMa_device_config* self);
 void KotoMa_device_config_SetPulse_channelMap(KotoMa_device_config* self, int32_t value);
 bool KotoMa_device_config_GetCoreaudio_allowNominalSampleRateChange(const KotoMa_device_config* self);

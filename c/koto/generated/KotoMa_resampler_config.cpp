@@ -52,10 +52,6 @@ void KotoMa_resampler_config_SetAlgorithm(KotoMa_resampler_config* self, KotoMa_
     koto::cpp(self)->algorithm = static_cast<ma_resample_algorithm>(value);
 }
 
-void* KotoMa_resampler_config_GetBackendUserData(const KotoMa_resampler_config* self) {
-    return koto::cpp(self)->pBackendUserData;
-}
-
 uint32_t KotoMa_resampler_config_GetLinear_lpfOrder(const KotoMa_resampler_config* self) {
     return static_cast<uint32_t>(koto::cpp(self)->linear.lpfOrder);
 }

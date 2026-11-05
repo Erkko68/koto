@@ -4,4 +4,21 @@ package io.github.erkko68.koto
 import io.github.erkko68.koto.capi.*
 import io.github.erkko68.koto.interop.*
 
-class DeviceInfo internal constructor(val deviceInfoHandle: NativePointer, owned: Boolean = false) : NativeObject(owned)
+class DeviceInfo internal constructor(val deviceInfoHandle: NativePointer, owned: Boolean = false) : NativeObject(owned), AutoCloseable {
+    constructor() : this(KotoMa_device_info_create(), owned = true)
+
+    override fun close() =
+        closeOnce { KotoMa_device_info_destroy(deviceInfoHandle) }
+
+    var name: String?
+        get() = stringFromInterop(KotoMa_device_info_GetName(deviceInfoHandle))
+        set(value) = interopScope { KotoMa_device_info_SetName(deviceInfoHandle, toInterop(value)) }
+
+    var isDefault: Boolean
+        get() = KotoMa_device_info_GetIsDefault(deviceInfoHandle)
+        set(value) = KotoMa_device_info_SetIsDefault(deviceInfoHandle, value)
+
+    var nativeDataFormatCount: Int
+        get() = KotoMa_device_info_GetNativeDataFormatCount(deviceInfoHandle)
+        set(value) = KotoMa_device_info_SetNativeDataFormatCount(deviceInfoHandle, value)
+}

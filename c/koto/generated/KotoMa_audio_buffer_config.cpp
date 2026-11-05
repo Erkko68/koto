@@ -48,6 +48,10 @@ const void* KotoMa_audio_buffer_config_GetData(const KotoMa_audio_buffer_config*
     return koto::cpp(self)->pData;
 }
 
+void KotoMa_audio_buffer_config_SetData(KotoMa_audio_buffer_config* self, const void* value) {
+    koto::cpp(self)->pData = value;
+}
+
 void KotoMa_audio_buffer_config_GetAllocationCallbacks(const KotoMa_audio_buffer_config* self, KotoMa_allocation_callbacks* out) {
     *koto::cpp(out) = koto::cpp(self)->allocationCallbacks;
 }

@@ -100,6 +100,7 @@ actual object Upcalls {
 actual fun readSlot(args: NativePointer, index: Int): Long = getI64(koto, args + index * 8)
 actual fun readPointerSlot(args: NativePointer, index: Int): NativePointer = getI32(koto, args + index * 8)
 actual fun writeSlot(result: NativePointer, value: Long) = setI64(koto, result, value)
+actual fun writePointerSlot(result: NativePointer, value: NativePointer) = writeSlot(result, value.toLong())
 
 actual fun readFloats(ptr: NativePointer, count: Int): FloatArray = FloatArray(count) { getF32(koto, ptr + it * 4) }
 

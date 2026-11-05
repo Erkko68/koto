@@ -72,6 +72,7 @@ expect fun readPointerSlot(args: NativePointer, index: Int): NativePointer
 
 /** Sets an upcall's result. */
 expect fun writeSlot(result: NativePointer, value: Long)
+expect fun writePointerSlot(result: NativePointer, value: NativePointer)
 
 /** A copy of [count] floats of an array C owns (a math mirror). */
 expect fun readFloats(ptr: NativePointer, count: Int): FloatArray

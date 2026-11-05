@@ -26,6 +26,8 @@ registerApiGenTasks(
             parameterPrefix = "^pp?(?=[A-Z])",
             // The pointers miniaudio writes one value through: a Kotlin function returns those.
             outParameter = "^p(Major|Minor|Revision|Format|Channels|SampleRate|Cursor|Length|Available|FramesRead|FramesWritten|FramesProcessed|Volume|GainDB|CursorInSeconds|LengthInSeconds)$",
+            // Encoded audio in memory, which Kotlin passes as a ByteArray.
+            byteCount = "^(dataSize|sizeInBytes)$",
         ),
         types = TypeTables(
             scalars = mapOf("ma_bool32" to Scalar("bool", "({}) ? MA_TRUE : MA_FALSE", "({}) != MA_FALSE")),

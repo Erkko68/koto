@@ -34,9 +34,7 @@ void KotoMa_decoder_config_SetSeekPointCount(KotoMa_decoder_config* self, uint32
 // skipped ma_decoder_config::ppCustomBackendVTables: uses ma_decoding_backend_vtable
 uint32_t KotoMa_decoder_config_GetCustomBackendCount(const KotoMa_decoder_config* self);
 void KotoMa_decoder_config_SetCustomBackendCount(KotoMa_decoder_config* self, uint32_t value);
-void* KotoMa_decoder_config_GetCustomBackendUserData(const KotoMa_decoder_config* self);
-// TODO(handwritten) KotoMa_decoder_config_SetCustomBackendUserData: void * ma_decoder_config::pCustomBackendUserData
-//     void *: the struct would keep the caller's pointer
+// skipped ma_decoder_config::pCustomBackendUserData: ma_(context_config::pUserData|decoder_config::pCustomBackendUserData|resource_manager_config::pCustomDecodingBackendUserData|resampler_config::pBackendUserData)
 
 
 #ifdef __cplusplus

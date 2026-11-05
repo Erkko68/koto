@@ -100,10 +100,6 @@ void KotoMa_resource_manager_config_SetCustomDecodingBackendCount(KotoMa_resourc
     koto::cpp(self)->customDecodingBackendCount = static_cast<unsigned int>(value);
 }
 
-void* KotoMa_resource_manager_config_GetCustomDecodingBackendUserData(const KotoMa_resource_manager_config* self) {
-    return koto::cpp(self)->pCustomDecodingBackendUserData;
-}
-
 void KotoMa_resource_manager_config_GetResampling(const KotoMa_resource_manager_config* self, KotoMa_resampler_config* out) {
     *koto::cpp(out) = koto::cpp(self)->resampling;
 }

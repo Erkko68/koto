@@ -30,9 +30,6 @@ class ResamplerConfig internal constructor(val resamplerConfigHandle: NativePoin
         get() = ResampleAlgorithm.of(KotoMa_resampler_config_GetAlgorithm(resamplerConfigHandle))
         set(value) = KotoMa_resampler_config_SetAlgorithm(resamplerConfigHandle, value.value)
 
-    val backendUserData: NativePointer
-        get() = KotoMa_resampler_config_GetBackendUserData(resamplerConfigHandle)
-
     var linearLpfOrder: Int
         get() = KotoMa_resampler_config_GetLinear_lpfOrder(resamplerConfigHandle)
         set(value) = KotoMa_resampler_config_SetLinear_lpfOrder(resamplerConfigHandle, value)

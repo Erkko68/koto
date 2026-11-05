@@ -11,10 +11,10 @@ extern "C" {
 // ma_allocation_callbacks
 KotoMa_allocation_callbacks* KotoMa_allocation_callbacks_create(void);
 void KotoMa_allocation_callbacks_destroy(KotoMa_allocation_callbacks* self);
-// skipped ma_allocation_callbacks::pUserData: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_allocation_callbacks::onMalloc: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_allocation_callbacks::onRealloc: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_allocation_callbacks::onFree: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_allocation_callbacks::pUserData: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_allocation_callbacks::onMalloc: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_allocation_callbacks::onRealloc: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_allocation_callbacks::onFree: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

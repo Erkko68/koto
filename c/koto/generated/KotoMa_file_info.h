@@ -11,7 +11,7 @@ extern "C" {
 // ma_file_info
 KotoMa_file_info* KotoMa_file_info_create(void);
 void KotoMa_file_info_destroy(KotoMa_file_info* self);
-// skipped ma_file_info::sizeInBytes: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_file_info::sizeInBytes: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

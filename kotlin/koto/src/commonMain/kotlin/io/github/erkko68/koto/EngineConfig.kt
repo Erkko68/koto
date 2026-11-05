@@ -22,6 +22,18 @@ class EngineConfig internal constructor(val engineConfigHandle: NativePointer, o
         get() = KotoMa_engine_config_GetDevice(engineConfigHandle).takeIf { it != NullPointer }?.let { Device(it) }
         set(value) = KotoMa_engine_config_SetDevice(engineConfigHandle, value?.deviceHandle ?: NullPointer)
 
+    fun setDataCallback(value: ((Device?, NativePointer, NativePointer, Int) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Device(it) }, readPointerSlot(args, 1), readPointerSlot(args, 2), readSlot(args, 3).toInt()) })
+            KotoMa_engine_config_SetDataCallback(engineConfigHandle, Upcalls.function, valueUser)
+        }
+
+    fun setNotificationCallback(value: ((DeviceNotification?) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { DeviceNotification(it) }) })
+            KotoMa_engine_config_SetNotificationCallback(engineConfigHandle, Upcalls.function, valueUser)
+        }
+
     var log: Log?
         get() = KotoMa_engine_config_GetLog(engineConfigHandle).takeIf { it != NullPointer }?.let { Log(it) }
         set(value) = KotoMa_engine_config_SetLog(engineConfigHandle, value?.logHandle ?: NullPointer)
@@ -86,8 +98,11 @@ class EngineConfig internal constructor(val engineConfigHandle: NativePointer, o
         get() = KotoMa_engine_config_GetResourceManagerVFS(engineConfigHandle)
         set(value) = KotoMa_engine_config_SetResourceManagerVFS(engineConfigHandle, value)
 
-    val processUserData: NativePointer
-        get() = KotoMa_engine_config_GetProcessUserData(engineConfigHandle)
+    fun setOnProcess(value: ((NativePointer, Long) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0), readSlot(args, 1)) })
+            KotoMa_engine_config_SetOnProcess(engineConfigHandle, Upcalls.function, valueUser)
+        }
 
     var resourceManagerResampling: ResamplerConfig
         get() = run {

@@ -65,9 +65,6 @@ class DecoderConfig internal constructor(val decoderConfigHandle: NativePointer,
         get() = KotoMa_decoder_config_GetCustomBackendCount(decoderConfigHandle)
         set(value) = KotoMa_decoder_config_SetCustomBackendCount(decoderConfigHandle, value)
 
-    val customBackendUserData: NativePointer
-        get() = KotoMa_decoder_config_GetCustomBackendUserData(decoderConfigHandle)
-
     companion object {
         fun init(outputFormat: Format, outputChannels: Int, outputSampleRate: Int): DecoderConfig =
             run {
