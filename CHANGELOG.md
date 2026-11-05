@@ -7,6 +7,8 @@ release's notes (`.github/workflows/publish.yml`).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-05
+
 ### Added
 - **miniaudio 0.11.26 for Kotlin Multiplatform**: its engine, sounds, resource manager, node graph, decoders, encoders,
   data sources and devices, generated, in `commonMain`, on Android, iOS, the JVM (macOS arm64, Linux and Windows x64 and
@@ -29,4 +31,5 @@ release's notes (`.github/workflows/publish.yml`).
 - Enums whose values miniaudio sets explicitly: `DeviceType` was off by one, and `ChannelMixMode.DEFAULT` and
   `MonoExpansionMode.DEFAULT` weren't their aliases.
 
-[Unreleased]: https://github.com/Erkko68/koto/commits/main
+[Unreleased]: https://github.com/Erkko68/koto/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/Erkko68/koto/releases/tag/0.1.0
