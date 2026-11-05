@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>SoundConfig</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+        <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer="defer"></script>
+<link href="../../../styles/multimodule.css" rel="Stylesheet">
+</head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+            <a class="library-name--link" href="../../../index.html" tabindex="1">
+                    koto
+            </a>
+        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle"
+                type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;koto/io.github.erkko68.koto/-sound-config/index.html&quot;}">0.1.0</dokka-template-command>        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true"
+                        data-filter=":kotlin:koto/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox"
+                        data-role="dropdown-toggle"
+                        aria-controls="platform-tags-listbox"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-label="Toggle source sets"
+                ></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":kotlin:koto/commonMain"
+                                       data-filter=":kotlin:koto/commonMain"/>
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button"
+                    type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config='{"defaultSize": 280, "minSize": 200, "maxSize": 400}'>
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list"
+                    data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    koto
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="koto::io.github.erkko68.koto/SoundConfig///PointingToDeclaration//-1053350863">
+  <div class="breadcrumbs"><a href="../../../index.html">koto</a><span class="delimiter">/</span><a href="../index.html">io.github.erkko68.koto</a><span class="delimiter">/</span><span class="current">SoundConfig</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Sound</span><wbr></wbr><span><span>Config</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">SoundConfig</a> : <a href="../../io.github.erkko68.koto.interop/-native-object/index.html">NativeObject</a>, <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-auto-closeable/index.html">AutoCloseable</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="tableheader">Constructors</h2>
+        <div class="table"><a data-name="1698376013%2FConstructors%2F-1053350863" anchor-label="SoundConfig" id="1698376013%2FConstructors%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-sound-config.html"><span>Sound</span><wbr></wbr><span><span>Config</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1698376013%2FConstructors%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-449357115%2FClasslikes%2F-1053350863" anchor-label="Companion" id="-449357115%2FClasslikes%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-449357115%2FClasslikes%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="-1866142041%2FProperties%2F-1053350863" anchor-label="channelsIn" id="-1866142041%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="channels-in.html"><span>channels</span><wbr></wbr><span><span>In</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1866142041%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="channels-in.html">channelsIn</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="489357728%2FProperties%2F-1053350863" anchor-label="channelsOut" id="489357728%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="channels-out.html"><span>channels</span><wbr></wbr><span><span>Out</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="489357728%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="channels-out.html">channelsOut</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-820615849%2FProperties%2F-1053350863" anchor-label="dataSource" id="-820615849%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="data-source.html"><span>data</span><wbr></wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-820615849%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="data-source.html">dataSource</a><span class="token operator">: </span><a href="../../io.github.erkko68.koto.interop/-native-pointer/index.html">NativePointer</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1826923151%2FProperties%2F-1053350863" anchor-label="doneFence" id="1826923151%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="done-fence.html"><span>done</span><wbr></wbr><span><span>Fence</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1826923151%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="done-fence.html">doneFence</a><span class="token operator">: </span><a href="../-fence/index.html">Fence</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-447455941%2FProperties%2F-1053350863" anchor-label="filePath" id="-447455941%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="file-path.html"><span>file</span><wbr></wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-447455941%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="file-path.html">filePath</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="398473559%2FProperties%2F-1053350863" anchor-label="flags" id="398473559%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="flags.html"><span><span>flags</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="398473559%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="flags.html">flags</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-482564393%2FProperties%2F-1053350863" anchor-label="initialAttachment" id="-482564393%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="initial-attachment.html"><span>initial</span><wbr></wbr><span><span>Attachment</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-482564393%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="initial-attachment.html">initialAttachment</a><span class="token operator">: </span><a href="../../io.github.erkko68.koto.interop/-native-pointer/index.html">NativePointer</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-359734681%2FProperties%2F-1053350863" anchor-label="initialAttachmentInputBusIndex" id="-359734681%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="initial-attachment-input-bus-index.html"><span>initial</span><wbr></wbr><span>Attachment</span><wbr></wbr><span>Input</span><wbr></wbr><span>Bus</span><wbr></wbr><span><span>Index</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-359734681%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="initial-attachment-input-bus-index.html">initialAttachmentInputBusIndex</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1165598295%2FProperties%2F-1053350863" anchor-label="initialSeekPointInPCMFrames" id="1165598295%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="initial-seek-point-in-p-c-m-frames.html"><span>initial</span><wbr></wbr><span>Seek</span><wbr></wbr><span>Point</span><wbr></wbr><span>In</span><wbr></wbr><span><span>PCMFrames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1165598295%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="initial-seek-point-in-p-c-m-frames.html">initialSeekPointInPCMFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-121551414%2FProperties%2F-1053350863" anchor-label="isLooping" id="-121551414%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-looping.html"><span>is</span><wbr></wbr><span><span>Looping</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-121551414%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="is-looping.html">isLooping</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1850755419%2FProperties%2F-1053350863" anchor-label="loopPointBegInPCMFrames" id="1850755419%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="loop-point-beg-in-p-c-m-frames.html"><span>loop</span><wbr></wbr><span>Point</span><wbr></wbr><span>Beg</span><wbr></wbr><span>In</span><wbr></wbr><span><span>PCMFrames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1850755419%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="loop-point-beg-in-p-c-m-frames.html">loopPointBegInPCMFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-96258510%2FProperties%2F-1053350863" anchor-label="loopPointEndInPCMFrames" id="-96258510%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="loop-point-end-in-p-c-m-frames.html"><span>loop</span><wbr></wbr><span>Point</span><wbr></wbr><span>End</span><wbr></wbr><span>In</span><wbr></wbr><span><span>PCMFrames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-96258510%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="loop-point-end-in-p-c-m-frames.html">loopPointEndInPCMFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1303748735%2FProperties%2F-1053350863" anchor-label="monoExpansionMode" id="1303748735%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="mono-expansion-mode.html"><span>mono</span><wbr></wbr><span>Expansion</span><wbr></wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1303748735%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="mono-expansion-mode.html">monoExpansionMode</a><span class="token operator">: </span><a href="../-mono-expansion-mode/index.html">MonoExpansionMode</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1909901188%2FProperties%2F-1053350863" anchor-label="pitchResampling" id="1909901188%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="pitch-resampling.html"><span>pitch</span><wbr></wbr><span><span>Resampling</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1909901188%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="pitch-resampling.html">pitchResampling</a><span class="token operator">: </span><a href="../-resampler-config/index.html">ResamplerConfig</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1748353226%2FProperties%2F-1053350863" anchor-label="rangeBegInPCMFrames" id="1748353226%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="range-beg-in-p-c-m-frames.html"><span>range</span><wbr></wbr><span>Beg</span><wbr></wbr><span>In</span><wbr></wbr><span><span>PCMFrames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1748353226%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="range-beg-in-p-c-m-frames.html">rangeBegInPCMFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-198660703%2FProperties%2F-1053350863" anchor-label="rangeEndInPCMFrames" id="-198660703%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="range-end-in-p-c-m-frames.html"><span>range</span><wbr></wbr><span>End</span><wbr></wbr><span>In</span><wbr></wbr><span><span>PCMFrames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-198660703%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="range-end-in-p-c-m-frames.html">rangeEndInPCMFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="935110629%2FProperties%2F-1053350863" anchor-label="soundConfigHandle" id="935110629%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="sound-config-handle.html"><span>sound</span><wbr></wbr><span>Config</span><wbr></wbr><span><span>Handle</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="935110629%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="sound-config-handle.html">soundConfigHandle</a><span class="token operator">: </span><a href="../../io.github.erkko68.koto.interop/-native-pointer/index.html">NativePointer</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1364335384%2FProperties%2F-1053350863" anchor-label="volumeSmoothTimeInPCMFrames" id="1364335384%2FProperties%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="volume-smooth-time-in-p-c-m-frames.html"><span>volume</span><wbr></wbr><span>Smooth</span><wbr></wbr><span>Time</span><wbr></wbr><span>In</span><wbr></wbr><span><span>PCMFrames</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1364335384%2FProperties%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">var </span><a href="volume-smooth-time-in-p-c-m-frames.html">volumeSmoothTimeInPCMFrames</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-686630138%2FFunctions%2F-1053350863" anchor-label="close" id="-686630138%2FFunctions%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="close.html"><span><span>close</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-686630138%2FFunctions%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="close.html"><span class="token function">close</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="950533972%2FFunctions%2F-1053350863" anchor-label="setEndCallback" id="950533972%2FFunctions%2F-1053350863" data-filterable-set=":kotlin:koto/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kotlin:koto/commonMain" data-filterable-set=":kotlin:koto/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-end-callback.html"><span>set</span><wbr></wbr><span>End</span><wbr></wbr><span><span>Callback</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="950533972%2FFunctions%2F-1053350863"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kotlin:koto/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="set-end-callback.html"><span class="token function">setEndCallback</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><span class="token punctuation">(</span><a href="../-sound/index.html">Sound</a><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2026 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
