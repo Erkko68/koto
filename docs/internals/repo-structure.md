@@ -17,7 +17,6 @@ Most of `c/` and `kotlin/koto/src/commonMain` is generated and committed.
 | `./gradlew -p build-logic test` | The generator on its fixture library. |
 | `KOTO_LISTEN=1 ./gradlew :kotlin:koto:jvmTest --tests '*ListenTest*' --rerun` | Plays miniaudio's test clip through the default output device, a scene at a time, saying what to listen for. `KOTO_LISTEN=<file>` plays a WAV, FLAC or MP3 of your own; `KOTO_VOLUME` sets the loudness. |
 
-The generator started as kolt's, the one that writes Kotlin. It reads `miniaudio.h` as C++, so what C can't express
-(structs by value, caller-allocated objects) comes from the same bridges that serve a C++ library, and three things
-were added for C: `typedef struct {…} name;`, fields of unnamed structs, and functions named after their object
+The generator reads `miniaudio.h` as C++, so what C can't express (structs by value, caller-allocated objects) comes
+from the same bridges that serve a C++ library, and three things handle C: `typedef struct {…} name;`, fields of unnamed structs, and functions named after their object
 (`CObjects`). It needs `clang` and `clang++` on the path.
