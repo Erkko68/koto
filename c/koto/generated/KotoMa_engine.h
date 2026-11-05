@@ -11,25 +11,25 @@ extern "C" {
 // ma_engine
 KotoMa_engine* KotoMa_engine_create(void);
 void KotoMa_engine_destroy(KotoMa_engine* self);
-// skipped ma_engine::nodeGraph: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::pResourceManager: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::pDevice: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::pLog: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::sampleRate: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::listenerCount: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::listeners: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::allocationCallbacks: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::ownsResourceManager: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::ownsDevice: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::inlinedSoundLock: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::pInlinedSoundHead: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::inlinedSoundCount: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::gainSmoothTimeInFrames: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::defaultVolumeSmoothTimeInPCMFrames: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::monoExpansionMode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::onProcess: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::pProcessUserData: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_engine::pitchResamplingConfig: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::nodeGraph: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::pResourceManager: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::pDevice: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::pLog: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::sampleRate: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::listenerCount: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::listeners: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::allocationCallbacks: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::ownsResourceManager: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::ownsDevice: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::inlinedSoundLock: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::pInlinedSoundHead: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::inlinedSoundCount: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::gainSmoothTimeInFrames: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::defaultVolumeSmoothTimeInPCMFrames: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::monoExpansionMode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::onProcess: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::pProcessUserData: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_engine::pitchResamplingConfig: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

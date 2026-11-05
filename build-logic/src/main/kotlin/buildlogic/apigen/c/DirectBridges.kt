@@ -52,11 +52,9 @@ class DirectBridges internal constructor(
         CAbi.checkPointee(base)
         val element = CValue.Builtin(CAbi.element(base))
         return when {
-            indirection == "*" -> CBridge("$c$base*", { it }, value = when {
-                const && base == "char" -> CValue.Text
-                base == "void" -> CValue.Opaque
-                else -> referenced(element)
-            })
+            // A struct keeps a copy of a string set on it, until it's set again or destroyed.
+            indirection == "*" && const && base == "char" -> CBridge("const char*", { it }, value = CValue.Text, assign = { field, v -> "$field = $h::keep(&$field, $v);" })
+            indirection == "*" -> CBridge("$c$base*", { it }, value = if (base == "void") CValue.Opaque else referenced(element))
             result -> CBridge("$base*", { "&$it" })
             else -> CBridge("$base*", { "*$it" }, value = referenced(element))
         }

@@ -107,7 +107,9 @@ internal class CApiWriter(
         }
         if (records.destroys(record)) {
             emit("${self}_destroy", "~${record.name}()", section) {
-                Forwarder("void ${self}_destroy($self* self)", "delete $h::cpp(self);", Bound(Bound.Role.DESTROY, record.name, "destroy"))
+                // The strings its setters kept (DirectBridges.KEEP) go with it.
+                val forget = if (records.fields(record).any { records.keepsText(it.type) }) "$h::forget($h::cpp(self), sizeof(*$h::cpp(self)));\n    " else ""
+                Forwarder("void ${self}_destroy($self* self)", "${forget}delete $h::cpp(self);", Bound(Bound.Role.DESTROY, record.name, "destroy"))
             }
         }
         upcalls(record, section, counted)
@@ -243,12 +245,13 @@ internal class CApiWriter(
             ?.takeIf { method.returns.spelling == "void" }
         val filled = out?.let { bridges.filled(it.type) }
         val returns = filled ?: bridges.result(method.returns)
-        val params = bridge(if (filled == null) method.params else method.params - out!!)
+        val bridged = bridge(if (filled == null) method.params else method.params - out!!)
+        val params = taken(bridged)
         val const = if (method.isConst) "const " else ""
         val self = if (method.isStatic) null else "$const${names.type(method.owner)}* self"
         val target = if (method.isStatic) "${templates.cpp(method.owner)}::" else "$h::cpp(self)->"
         val explicit = if (templateArguments.isEmpty()) "" else templateArguments.joinToString(prefix = "<", postfix = ">")
-        val passed = params.iterator()
+        val passed = bridged.iterator()
         val call = "$target${method.name}$explicit(${method.params.joinToString { p -> if (filled != null && p === out) "filled" else passed.next().let { (n, b) -> b.convert(n) } }})"
         val bound = Bound(Bound.Role.METHOD, method.owner, method.name, params, returns, method.isStatic, signature = virtualSignature(method), doc = method.doc)
         return when {
@@ -260,7 +263,10 @@ internal class CApiWriter(
         }
     }
 
-    /** A value struct's field: a getter, and a setter unless the struct would keep the caller's pointer. */
+    /**
+     * A value struct's field: a getter, and a setter unless the struct would keep the caller's pointer. A string it
+     * keeps a copy of; a `void*` is the caller's, as every pointer Kotlin passes is.
+     */
     private fun field(record: CppRecord, field: CppField, section: Section) {
         val self = names.type(record.name)
         val cpp = "${field.type.spelling} ${record.name}::${field.name}"
@@ -280,8 +286,8 @@ internal class CApiWriter(
             return
         }
         if (setter !in functionNames) emit(setter, cpp, section) {
-            if (records.borrowsPointer(field.type)) throw Unsupported("${field.type.spelling}: the struct would keep the caller's pointer")
             val param = bridges.param(field.type)
+            if (records.borrowsPointer(field.type) && !records.keepsText(field.type) && param.value != CValue.Opaque) throw Unsupported("${field.type.spelling}: the struct would keep the caller's pointer")
             Forwarder("void $setter(${cParams("$self* self", listOf("value" to param))})", param.assign("$h::cpp(self)->${field.name}", "value"),
                 Bound(Bound.Role.SETTER, record.name, setter.removePrefix("${self}_"), listOf("value" to param), doc = field.doc))
         }
@@ -294,6 +300,9 @@ internal class CApiWriter(
     private fun emit(name: String, cpp: String, section: Section, guard: String? = null, build: () -> Forwarder) {
         try {
             val forwarder = build()
+            forwarder.bound.params.firstOrNull { it.second.trampoline }?.let { (n, b) ->
+                if (name !in manual) throw Unsupported("$n: a C callback, whose trampoline manual/ writes (${(b.value as CValue.Function).args.size} args)")
+            }
             val (signature, body) = forwarder.signature to forwarder.body
             if (!functionNames.add(name)) throw Unsupported("$name is already generated for another overload")
             if (name in manual) {
@@ -308,14 +317,32 @@ internal class CApiWriter(
         } catch (e: Unsupported) {
             // By hand as itself, or as one function per case (`_aux_float2`, … for a std::variant).
             val handwritten = manual.filter { it == name || it.startsWith("${name}_") }
-            val note = if (handwritten.isNotEmpty()) "handwritten in manual/" else "TODO(handwritten)"
+            val note = if (handwritten.isNotEmpty()) "handwritten in manual/" else if (e.skipped) "skipped" else "TODO(handwritten)"
             section.declarations.appendLine("// $note $name: $cpp\n//     ${e.message}")
-            if (handwritten.isEmpty()) bindings += Binding(name, cpp, todo(e.message!!)) else handwritten.forEach { bindings += Binding(it, cpp, null) }
+            if (handwritten.isEmpty()) bindings += Binding(name, cpp, if (e.skipped) skipped(e.message!!) else todo(e.message!!)) else handwritten.forEach { bindings += Binding(it, cpp, null) }
         }
     }
 
-    private fun bridge(params: List<CppParam>) =
-        params.mapIndexed { i, p -> p.name.ifEmpty { "arg$i" }.let { if (it in RESERVED) "${it}_" else it } to bridges.param(p.type) }
+    /** A `const void*` and the count of its bytes after it ([buildlogic.apigen.Naming.byteCount]) are a byte array and its size. */
+    private fun bridge(params: List<CppParam>): List<Pair<String, CBridge>> {
+        val named = params.mapIndexed { i, p -> p.name.ifEmpty { "arg$i" }.let { if (it in RESERVED) "${it}_" else it } }
+        fun bytes(i: Int) = shape(params[i].type.spelling).let { it.base == "void" && it.const && it.indirection == listOf("*") } &&
+            params.getOrNull(i + 1)?.let { config.naming.isByteCount(it.name) } == true
+        return params.mapIndexed { i, p ->
+            named[i] to when {
+                bytes(i) -> CBridge("const void*", { it }, extra = CBridge.COUNT, value = CValue.Pointer(CValue.Builtin("uint8_t"), const = true))
+                i > 0 && bytes(i - 1) -> CBridge("uint32_t", { "static_cast<${p.type.spelling}>(${named[i - 1]}Count)" }, implied = true)
+                else -> bridges.param(p.type)
+            }
+        }
+    }
+
+    /**
+     * [params] less a callback's own user data, which is its Upcall's: the trampoline (manual/) passes it, so C takes
+     * none; and less what another parameter passes ([CBridge.implied]).
+     */
+    private fun taken(params: List<Pair<String, CBridge>>) =
+        params.filterIndexed { i, (_, b) -> !b.implied && !(i > 0 && params[i - 1].second.trampoline && b.value == CValue.Opaque) }
 
     private fun cParams(self: String?, params: List<Pair<String, CBridge>>, out: String? = null) =
         (listOfNotNull(self) + params.flatMap { (n, b) -> listOf("${b.c} $n") + b.extra.map { (c, suffix) -> "$c $n$suffix" } } + listOfNotNull(out)).joinToString().ifEmpty { "void" }

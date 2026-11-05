@@ -11,5 +11,22 @@ release's notes (`.github/workflows/publish.yml`).
 - **miniaudio 0.11.26 for Kotlin Multiplatform**: its engine, sounds, resource manager, node graph, decoders, encoders,
   data sources and devices, generated, in `commonMain`, on Android, iOS, the JVM (macOS arm64, Linux and Windows x64 and
   arm64) and the web (JS and Wasm).
+- **Callbacks as Kotlin lambdas**: a device's data, stop and notification callbacks, an engine's `onProcess`, data and
+  notification callbacks, a sound's end callback, a data source's next, `Context.enumerateDevices`, and Kotlin I/O
+  under `Decoder.init` and `Encoder.init`. `DeviceInfo` and `DeviceNotification` read their fields.
+- **Strings a config keeps**: `SoundConfig.filePath`, the PulseAudio and JACK names, copied into the config.
+- **Audio as bytes**: `Decoder.initMemory` and `ResourceManager.registerEncodedData` take a `ByteArray` and keep a
+  copy, so audio read with Compose resources or any other library plays on every platform. PCM as a `FloatArray` of
+  frames: `ResourceManager.registerDecodedData` and `AudioBuffer.initCopy`.
+- `ContextConfig.dsound.hWnd` and `AudioBufferConfig.data`.
+
+### Removed
+- `Noise.initPreallocated`: it needs native memory Kotlin doesn't allocate; `init` allocates its own.
+- `DeviceConfig.userData`: koto's callbacks keep their lambdas there.
+- `ContextConfig.userData` and the custom backends' user data, whose vtables aren't bound.
+
+### Fixed
+- Enums whose values miniaudio sets explicitly: `DeviceType` was off by one, and `ChannelMixMode.DEFAULT` and
+  `MonoExpansionMode.DEFAULT` weren't their aliases.
 
 [Unreleased]: https://github.com/Erkko68/koto/commits/main

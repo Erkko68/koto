@@ -78,6 +78,7 @@ actual fun readPointerSlot(args: NativePointer, index: Int): NativePointer = rea
 actual fun writeSlot(result: NativePointer, value: Long) {
     result.toCPointer<LongVar>()!![0] = value
 }
+actual fun writePointerSlot(result: NativePointer, value: NativePointer) = writeSlot(result, value)
 
 actual fun readFloats(ptr: NativePointer, count: Int): FloatArray = ptr.toCPointer<FloatVar>()!!.let { p -> FloatArray(count) { p[it] } }
 actual fun writeFloats(ptr: NativePointer, values: FloatArray) {

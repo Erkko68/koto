@@ -5,13 +5,16 @@ miniaudio.h
 # The modules a game uses. Raw DSP, conversion, ring buffers and the like are what these drive for you; a line here
 # binds one when something needs it.
 -::ma_(?!(engine|sound|resource_manager|node|data_source|audio_buffer|decoder|encoder|waveform|noise|pulsewave|device|context|fence|async_notification|(biquad|lpf|hpf|bpf|notch|peak|loshelf|hishelf|delay|splitter)_node|version|result_description)).*
--ma_(?!(engine|sound|resource_manager|node|data_source|audio_buffer|decoder|encoder|decoding_backend|waveform|noise|pulsewave|device|context|fence|async_notification|(biquad|lpf|hpf|bpf|notch|peak|loshelf|hishelf|delay|splitter)_node|vec3f|allocation_callbacks|log|vfs|file_info)\b|\w*_config$)\w*
+-ma_(?!(engine|sound|resource_manager|node|data_source|audio_buffer|decoder|encoder|decoding_backend|waveform|noise|pulsewave|device|context|fence|async_notification|(biquad|lpf|hpf|bpf|notch|peak|loshelf|hishelf|delay|splitter)_node|device_info|device_notification|vec3f|allocation_callbacks|log|vfs|file_info)\b|\w*_config$)\w*
 
 # Only ever handles: past a config, a struct's fields are miniaudio's state, and some differ per platform.
--(?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+-(?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 # ma_sound_group is ma_sound, and its functions forward to ma_sound's.
 -::ma_sound_group_(?!init|uninit).*
+
+# Hands out an array the context keeps: enumerateDevices calls back with each.
+-::ma_context_get_devices
 
 # Structs on POSIX, plain handles on Win32: not API to bind from one platform's headers, and not audio.
 -ma_event
@@ -19,3 +22,16 @@ miniaudio.h
 
 # UTF-16 variants: Kotlin strings cross as UTF-8.
 -::ma_.*_w
+-ma_\w+::pFilePathW
+
+# The user data koto's callbacks keep there: a Kotlin lambda holds its own.
+-ma_(device_config::pUserData|sound_config::pEndCallbackUserData|engine_config::pProcessUserData)
+
+# User data for custom backends, whose vtables aren't bound.
+-ma_(context_config::pUserData|decoder_config::pCustomBackendUserData|resource_manager_config::pCustomDecodingBackendUserData|resampler_config::pBackendUserData)
+
+# For memory the caller allocates natively, which Kotlin doesn't: init allocates its own.
+-::ma_\w+_(get_heap_size|init_preallocated)
+
+# getInfo reads it, with the rest of the device's info.
+-::ma_device_get_name

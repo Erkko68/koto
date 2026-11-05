@@ -4,4 +4,33 @@ package io.github.erkko68.koto
 import io.github.erkko68.koto.capi.*
 import io.github.erkko68.koto.interop.*
 
-class DeviceNotification internal constructor(val deviceNotificationHandle: NativePointer, owned: Boolean = false) : NativeObject(owned)
+class DeviceNotification internal constructor(val deviceNotificationHandle: NativePointer, owned: Boolean = false) : NativeObject(owned), AutoCloseable {
+    constructor() : this(KotoMa_device_notification_create(), owned = true)
+
+    override fun close() =
+        closeOnce { KotoMa_device_notification_destroy(deviceNotificationHandle) }
+
+    var device: Device?
+        get() = KotoMa_device_notification_GetDevice(deviceNotificationHandle).takeIf { it != NullPointer }?.let { Device(it) }
+        set(value) = KotoMa_device_notification_SetDevice(deviceNotificationHandle, value?.deviceHandle ?: NullPointer)
+
+    var type: DeviceNotificationType
+        get() = DeviceNotificationType.of(KotoMa_device_notification_GetType(deviceNotificationHandle))
+        set(value) = KotoMa_device_notification_SetType(deviceNotificationHandle, value.value)
+
+    var dataStartedUnused: Int
+        get() = KotoMa_device_notification_GetData_started__unused(deviceNotificationHandle)
+        set(value) = KotoMa_device_notification_SetData_started__unused(deviceNotificationHandle, value)
+
+    var dataStoppedUnused: Int
+        get() = KotoMa_device_notification_GetData_stopped__unused(deviceNotificationHandle)
+        set(value) = KotoMa_device_notification_SetData_stopped__unused(deviceNotificationHandle, value)
+
+    var dataReroutedUnused: Int
+        get() = KotoMa_device_notification_GetData_rerouted__unused(deviceNotificationHandle)
+        set(value) = KotoMa_device_notification_SetData_rerouted__unused(deviceNotificationHandle, value)
+
+    var dataInterruptionUnused: Int
+        get() = KotoMa_device_notification_GetData_interruption__unused(deviceNotificationHandle)
+        set(value) = KotoMa_device_notification_SetData_interruption__unused(deviceNotificationHandle, value)
+}

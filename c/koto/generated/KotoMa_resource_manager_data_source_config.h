@@ -12,12 +12,8 @@ extern "C" {
 KotoMa_resource_manager_data_source_config* KotoMa_resource_manager_data_source_config_create(void);
 void KotoMa_resource_manager_data_source_config_destroy(KotoMa_resource_manager_data_source_config* self);
 const char* KotoMa_resource_manager_data_source_config_GetFilePath(const KotoMa_resource_manager_data_source_config* self);
-// TODO(handwritten) KotoMa_resource_manager_data_source_config_SetFilePath: const char * ma_resource_manager_data_source_config::pFilePath
-//     const char *: the struct would keep the caller's pointer
-// TODO(handwritten) KotoMa_resource_manager_data_source_config_GetFilePathW: const wchar_t * ma_resource_manager_data_source_config::pFilePathW
-//     const wchar_t *: unresolved
-// TODO(handwritten) KotoMa_resource_manager_data_source_config_SetFilePathW: const wchar_t * ma_resource_manager_data_source_config::pFilePathW
-//     const wchar_t *: unresolved
+void KotoMa_resource_manager_data_source_config_SetFilePath(KotoMa_resource_manager_data_source_config* self, const char* value);
+// skipped ma_resource_manager_data_source_config::pFilePathW: ma_\w+::pFilePathW
 // skipped ma_resource_manager_data_source_config::pNotifications: uses ma_resource_manager_pipeline_notifications
 void KotoMa_resource_manager_data_source_config_GetInitialSeekPointInPCMFrames(const KotoMa_resource_manager_data_source_config* self, uint64_t* out);
 void KotoMa_resource_manager_data_source_config_SetInitialSeekPointInPCMFrames(KotoMa_resource_manager_data_source_config* self, uint64_t value);

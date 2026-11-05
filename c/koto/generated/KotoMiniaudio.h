@@ -13,7 +13,7 @@ void Koto_ma_version(unsigned int* pMajor, unsigned int* pMinor, unsigned int* p
 const char* Koto_ma_version_string(void);
 void Koto_ma_data_source_config_init(KotoMa_data_source_config* out);
 KotoMa_result Koto_ma_data_source_init(const KotoMa_data_source_config* pConfig, void* pDataSource);
-void Koto_ma_data_source_uninit(void* pDataSource);
+// handwritten in manual/ Koto_ma_data_source_uninit: static void ::ma_data_source_uninit(ma_data_source * pDataSource)
 KotoMa_result Koto_ma_data_source_read_pcm_frames(void* pDataSource, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead);
 KotoMa_result Koto_ma_data_source_seek_pcm_frames(void* pDataSource, uint64_t frameCount, unsigned long long* pFramesSeeked);
 KotoMa_result Koto_ma_data_source_seek_to_pcm_frame(void* pDataSource, uint64_t frameIndex);
@@ -34,16 +34,15 @@ KotoMa_result Koto_ma_data_source_set_current(void* pDataSource, void* pCurrentD
 void* Koto_ma_data_source_get_current(const void* pDataSource);
 KotoMa_result Koto_ma_data_source_set_next(void* pDataSource, void* pNextDataSource);
 void* Koto_ma_data_source_get_next(const void* pDataSource);
-// TODO(handwritten) Koto_ma_data_source_set_next_callback: static ma_result ::ma_data_source_set_next_callback(ma_data_source * pDataSource, ma_data_source_get_next_proc onGetNext)
-//     ma_data_source *(*)(ma_data_source *): takes C++ types
-// TODO(handwritten) Koto_ma_data_source_get_next_callback: static ma_data_source_get_next_proc ::ma_data_source_get_next_callback(const ma_data_source * pDataSource)
-//     ma_data_source *(*)(ma_data_source *): takes C++ types
+// handwritten in manual/ Koto_ma_data_source_set_next_callback: static ma_result ::ma_data_source_set_next_callback(ma_data_source * pDataSource, ma_data_source_get_next_proc onGetNext)
+// skipped Koto_ma_data_source_get_next_callback: static ma_data_source_get_next_proc ::ma_data_source_get_next_callback(const ma_data_source * pDataSource)
+//     ma_data_source *(*)(ma_data_source *): a C function, which nothing outside C calls
 void Koto_ma_audio_buffer_config_init(KotoMa_format format, uint32_t channels, uint64_t sizeInFrames, const void* pData, const KotoMa_allocation_callbacks* pAllocationCallbacks, KotoMa_audio_buffer_config* out);
 KotoMa_result Koto_ma_audio_buffer_init(const KotoMa_audio_buffer_config* pConfig, KotoMa_audio_buffer* pAudioBuffer);
 KotoMa_result Koto_ma_audio_buffer_init_copy(const KotoMa_audio_buffer_config* pConfig, KotoMa_audio_buffer* pAudioBuffer);
 KotoMa_result Koto_ma_audio_buffer_alloc_and_init(const KotoMa_audio_buffer_config* pConfig, KotoMa_audio_buffer** ppAudioBuffer);
-void Koto_ma_audio_buffer_uninit(KotoMa_audio_buffer* pAudioBuffer);
-void Koto_ma_audio_buffer_uninit_and_free(KotoMa_audio_buffer* pAudioBuffer);
+// handwritten in manual/ Koto_ma_audio_buffer_uninit: static void ::ma_audio_buffer_uninit(ma_audio_buffer * pAudioBuffer)
+// handwritten in manual/ Koto_ma_audio_buffer_uninit_and_free: static void ::ma_audio_buffer_uninit_and_free(ma_audio_buffer * pAudioBuffer)
 void Koto_ma_audio_buffer_read_pcm_frames(KotoMa_audio_buffer* pAudioBuffer, void* pFramesOut, uint64_t frameCount, bool loop, uint64_t* out);
 KotoMa_result Koto_ma_audio_buffer_seek_to_pcm_frame(KotoMa_audio_buffer* pAudioBuffer, uint64_t frameIndex);
 KotoMa_result Koto_ma_audio_buffer_map(KotoMa_audio_buffer* pAudioBuffer, void** ppFramesOut, unsigned long long* pFrameCount);
@@ -65,17 +64,15 @@ KotoMa_result Koto_ma_context_init(const KotoMa_backend* backends, uint32_t back
 KotoMa_result Koto_ma_context_uninit(KotoMa_context* pContext);
 uint32_t Koto_ma_context_sizeof(void);
 KotoMa_log* Koto_ma_context_get_log(KotoMa_context* pContext);
-// TODO(handwritten) Koto_ma_context_enumerate_devices: static ma_result ::ma_context_enumerate_devices(ma_context * pContext, ma_enum_devices_callback_proc callback, void * pUserData)
-//     ma_bool32 (*)(ma_context *, ma_device_type, const ma_device_info *, void *): takes C++ types
+// handwritten in manual/ Koto_ma_context_enumerate_devices: static ma_result ::ma_context_enumerate_devices(ma_context * pContext, ma_enum_devices_callback_proc callback, void * pUserData)
 bool Koto_ma_context_is_loopback_supported(KotoMa_context* pContext);
 void Koto_ma_device_config_init(KotoMa_device_type deviceType, KotoMa_device_config* out);
-KotoMa_result Koto_ma_device_init(KotoMa_context* pContext, const KotoMa_device_config* pConfig, KotoMa_device* pDevice);
-KotoMa_result Koto_ma_device_init_ex(const KotoMa_backend* backends, uint32_t backendCount, const KotoMa_context_config* pContextConfig, const KotoMa_device_config* pConfig, KotoMa_device* pDevice);
-void Koto_ma_device_uninit(KotoMa_device* pDevice);
+// handwritten in manual/ Koto_ma_device_init: static ma_result ::ma_device_init(ma_context * pContext, const ma_device_config * pConfig, ma_device * pDevice)
+// handwritten in manual/ Koto_ma_device_init_ex: static ma_result ::ma_device_init_ex(const ma_backend * backends, ma_uint32 backendCount, const ma_context_config * pContextConfig, const ma_device_config * pConfig, ma_device * pDevice)
+// handwritten in manual/ Koto_ma_device_uninit: static void ::ma_device_uninit(ma_device * pDevice)
 KotoMa_context* Koto_ma_device_get_context(KotoMa_device* pDevice);
 KotoMa_log* Koto_ma_device_get_log(KotoMa_device* pDevice);
-// TODO(handwritten) Koto_ma_device_get_name: static ma_result ::ma_device_get_name(ma_device * pDevice, ma_device_type type, char * pName, size_t nameCap, size_t * pLengthNotIncludingNullTerminator)
-//     size_t*: its width differs across targets
+KotoMa_result Koto_ma_device_get_info(KotoMa_device* pDevice, KotoMa_device_type type, KotoMa_device_info* pDeviceInfo);
 KotoMa_result Koto_ma_device_start(KotoMa_device* pDevice);
 KotoMa_result Koto_ma_device_stop(KotoMa_device* pDevice);
 bool Koto_ma_device_is_started(const KotoMa_device* pDevice);
@@ -87,12 +84,11 @@ KotoMa_result Koto_ma_device_get_master_volume_db(KotoMa_device* pDevice, float*
 KotoMa_result Koto_ma_device_handle_backend_data_callback(KotoMa_device* pDevice, void* pOutput, const void* pInput, uint32_t frameCount);
 void Koto_ma_decoder_config_init(KotoMa_format outputFormat, uint32_t outputChannels, uint32_t outputSampleRate, KotoMa_decoder_config* out);
 void Koto_ma_decoder_config_init_default(KotoMa_decoder_config* out);
-// TODO(handwritten) Koto_ma_decoder_init: static ma_result ::ma_decoder_init(ma_decoder_read_proc onRead, ma_decoder_seek_proc onSeek, void * pUserData, const ma_decoder_config * pConfig, ma_decoder * pDecoder)
-//     ma_result (*)(ma_decoder *, void *, size_t, size_t *): takes C++ types
-KotoMa_result Koto_ma_decoder_init_memory(const void* pData, uint32_t dataSize, const KotoMa_decoder_config* pConfig, KotoMa_decoder* pDecoder);
+// handwritten in manual/ Koto_ma_decoder_init: static ma_result ::ma_decoder_init(ma_decoder_read_proc onRead, ma_decoder_seek_proc onSeek, void * pUserData, const ma_decoder_config * pConfig, ma_decoder * pDecoder)
+// handwritten in manual/ Koto_ma_decoder_init_memory: static ma_result ::ma_decoder_init_memory(const void * pData, size_t dataSize, const ma_decoder_config * pConfig, ma_decoder * pDecoder)
 KotoMa_result Koto_ma_decoder_init_vfs(void* pVFS, const char* pFilePath, const KotoMa_decoder_config* pConfig, KotoMa_decoder* pDecoder);
 KotoMa_result Koto_ma_decoder_init_file(const char* pFilePath, const KotoMa_decoder_config* pConfig, KotoMa_decoder* pDecoder);
-KotoMa_result Koto_ma_decoder_uninit(KotoMa_decoder* pDecoder);
+// handwritten in manual/ Koto_ma_decoder_uninit: static ma_result ::ma_decoder_uninit(ma_decoder * pDecoder)
 KotoMa_result Koto_ma_decoder_read_pcm_frames(KotoMa_decoder* pDecoder, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead);
 KotoMa_result Koto_ma_decoder_seek_to_pcm_frame(KotoMa_decoder* pDecoder, uint64_t frameIndex);
 KotoMa_result Koto_ma_decoder_get_data_format(KotoMa_decoder* pDecoder, KotoMa_format* pFormat, unsigned int* pChannels, unsigned int* pSampleRate, unsigned char* pChannelMap, uint32_t channelMapCap);
@@ -100,15 +96,14 @@ KotoMa_result Koto_ma_decoder_get_cursor_in_pcm_frames(KotoMa_decoder* pDecoder,
 KotoMa_result Koto_ma_decoder_get_length_in_pcm_frames(KotoMa_decoder* pDecoder, unsigned long long* pLength);
 KotoMa_result Koto_ma_decoder_get_available_frames(KotoMa_decoder* pDecoder, unsigned long long* pAvailableFrames);
 void Koto_ma_encoder_config_init(KotoMa_encoding_format encodingFormat, KotoMa_format format, uint32_t channels, uint32_t sampleRate, KotoMa_encoder_config* out);
-// TODO(handwritten) Koto_ma_encoder_init: static ma_result ::ma_encoder_init(ma_encoder_write_proc onWrite, ma_encoder_seek_proc onSeek, void * pUserData, const ma_encoder_config * pConfig, ma_encoder * pEncoder)
-//     ma_result (*)(ma_encoder *, const void *, size_t, size_t *): takes C++ types
+// handwritten in manual/ Koto_ma_encoder_init: static ma_result ::ma_encoder_init(ma_encoder_write_proc onWrite, ma_encoder_seek_proc onSeek, void * pUserData, const ma_encoder_config * pConfig, ma_encoder * pEncoder)
 KotoMa_result Koto_ma_encoder_init_vfs(void* pVFS, const char* pFilePath, const KotoMa_encoder_config* pConfig, KotoMa_encoder* pEncoder);
 KotoMa_result Koto_ma_encoder_init_file(const char* pFilePath, const KotoMa_encoder_config* pConfig, KotoMa_encoder* pEncoder);
-void Koto_ma_encoder_uninit(KotoMa_encoder* pEncoder);
+// handwritten in manual/ Koto_ma_encoder_uninit: static void ::ma_encoder_uninit(ma_encoder * pEncoder)
 KotoMa_result Koto_ma_encoder_write_pcm_frames(KotoMa_encoder* pEncoder, const void* pFramesIn, uint64_t frameCount, unsigned long long* pFramesWritten);
 void Koto_ma_waveform_config_init(KotoMa_format format, uint32_t channels, uint32_t sampleRate, KotoMa_waveform_type type, double amplitude, double frequency, KotoMa_waveform_config* out);
 KotoMa_result Koto_ma_waveform_init(const KotoMa_waveform_config* pConfig, KotoMa_waveform* pWaveform);
-void Koto_ma_waveform_uninit(KotoMa_waveform* pWaveform);
+// handwritten in manual/ Koto_ma_waveform_uninit: static void ::ma_waveform_uninit(ma_waveform * pWaveform)
 KotoMa_result Koto_ma_waveform_read_pcm_frames(KotoMa_waveform* pWaveform, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead);
 KotoMa_result Koto_ma_waveform_seek_to_pcm_frame(KotoMa_waveform* pWaveform, uint64_t frameIndex);
 KotoMa_result Koto_ma_waveform_set_amplitude(KotoMa_waveform* pWaveform, double amplitude);
@@ -117,7 +112,7 @@ KotoMa_result Koto_ma_waveform_set_type(KotoMa_waveform* pWaveform, KotoMa_wavef
 KotoMa_result Koto_ma_waveform_set_sample_rate(KotoMa_waveform* pWaveform, uint32_t sampleRate);
 void Koto_ma_pulsewave_config_init(KotoMa_format format, uint32_t channels, uint32_t sampleRate, double dutyCycle, double amplitude, double frequency, KotoMa_pulsewave_config* out);
 KotoMa_result Koto_ma_pulsewave_init(const KotoMa_pulsewave_config* pConfig, KotoMa_pulsewave* pWaveform);
-void Koto_ma_pulsewave_uninit(KotoMa_pulsewave* pWaveform);
+// handwritten in manual/ Koto_ma_pulsewave_uninit: static void ::ma_pulsewave_uninit(ma_pulsewave * pWaveform)
 KotoMa_result Koto_ma_pulsewave_read_pcm_frames(KotoMa_pulsewave* pWaveform, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead);
 KotoMa_result Koto_ma_pulsewave_seek_to_pcm_frame(KotoMa_pulsewave* pWaveform, uint64_t frameIndex);
 KotoMa_result Koto_ma_pulsewave_set_amplitude(KotoMa_pulsewave* pWaveform, double amplitude);
@@ -125,11 +120,8 @@ KotoMa_result Koto_ma_pulsewave_set_frequency(KotoMa_pulsewave* pWaveform, doubl
 KotoMa_result Koto_ma_pulsewave_set_sample_rate(KotoMa_pulsewave* pWaveform, uint32_t sampleRate);
 KotoMa_result Koto_ma_pulsewave_set_duty_cycle(KotoMa_pulsewave* pWaveform, double dutyCycle);
 void Koto_ma_noise_config_init(KotoMa_format format, uint32_t channels, KotoMa_noise_type type, int32_t seed, double amplitude, KotoMa_noise_config* out);
-// TODO(handwritten) Koto_ma_noise_get_heap_size: static ma_result ::ma_noise_get_heap_size(const ma_noise_config * pConfig, size_t * pHeapSizeInBytes)
-//     size_t*: its width differs across targets
-KotoMa_result Koto_ma_noise_init_preallocated(const KotoMa_noise_config* pConfig, void* pHeap, KotoMa_noise* pNoise);
 KotoMa_result Koto_ma_noise_init(const KotoMa_noise_config* pConfig, const KotoMa_allocation_callbacks* pAllocationCallbacks, KotoMa_noise* pNoise);
-void Koto_ma_noise_uninit(KotoMa_noise* pNoise, const KotoMa_allocation_callbacks* pAllocationCallbacks);
+// handwritten in manual/ Koto_ma_noise_uninit: static void ::ma_noise_uninit(ma_noise * pNoise, const ma_allocation_callbacks * pAllocationCallbacks)
 KotoMa_result Koto_ma_noise_read_pcm_frames(KotoMa_noise* pNoise, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead);
 KotoMa_result Koto_ma_noise_set_amplitude(KotoMa_noise* pNoise, double amplitude);
 KotoMa_result Koto_ma_noise_set_seed(KotoMa_noise* pNoise, int32_t seed);
@@ -137,11 +129,11 @@ KotoMa_result Koto_ma_noise_set_type(KotoMa_noise* pNoise, KotoMa_noise_type typ
 void Koto_ma_resource_manager_data_source_config_init(KotoMa_resource_manager_data_source_config* out);
 void Koto_ma_resource_manager_config_init(KotoMa_resource_manager_config* out);
 KotoMa_result Koto_ma_resource_manager_init(const KotoMa_resource_manager_config* pConfig, KotoMa_resource_manager* pResourceManager);
-void Koto_ma_resource_manager_uninit(KotoMa_resource_manager* pResourceManager);
+// handwritten in manual/ Koto_ma_resource_manager_uninit: static void ::ma_resource_manager_uninit(ma_resource_manager * pResourceManager)
 KotoMa_log* Koto_ma_resource_manager_get_log(KotoMa_resource_manager* pResourceManager);
 KotoMa_result Koto_ma_resource_manager_register_file(KotoMa_resource_manager* pResourceManager, const char* pFilePath, uint32_t flags);
-KotoMa_result Koto_ma_resource_manager_register_decoded_data(KotoMa_resource_manager* pResourceManager, const char* pName, const void* pData, uint64_t frameCount, KotoMa_format format, uint32_t channels, uint32_t sampleRate);
-KotoMa_result Koto_ma_resource_manager_register_encoded_data(KotoMa_resource_manager* pResourceManager, const char* pName, const void* pData, uint32_t sizeInBytes);
+// handwritten in manual/ Koto_ma_resource_manager_register_decoded_data: static ma_result ::ma_resource_manager_register_decoded_data(ma_resource_manager * pResourceManager, const char * pName, const void * pData, ma_uint64 frameCount, ma_format format, ma_uint32 channels, ma_uint32 sampleRate)
+// handwritten in manual/ Koto_ma_resource_manager_register_encoded_data: static ma_result ::ma_resource_manager_register_encoded_data(ma_resource_manager * pResourceManager, const char * pName, const void * pData, size_t sizeInBytes)
 KotoMa_result Koto_ma_resource_manager_unregister_file(KotoMa_resource_manager* pResourceManager, const char* pFilePath);
 KotoMa_result Koto_ma_resource_manager_unregister_data(KotoMa_resource_manager* pResourceManager, const char* pName);
 KotoMa_result Koto_ma_resource_manager_post_job_quit(KotoMa_resource_manager* pResourceManager);
@@ -202,13 +194,11 @@ float Koto_ma_delay_node_get_dry(const KotoMa_delay_node* pDelayNode);
 void Koto_ma_delay_node_set_decay(KotoMa_delay_node* pDelayNode, float value);
 float Koto_ma_delay_node_get_decay(const KotoMa_delay_node* pDelayNode);
 void Koto_ma_engine_node_config_init(KotoMa_engine* pEngine, KotoMa_engine_node_type type, uint32_t flags, KotoMa_engine_node_config* out);
-// TODO(handwritten) Koto_ma_engine_node_get_heap_size: static ma_result ::ma_engine_node_get_heap_size(const ma_engine_node_config * pConfig, size_t * pHeapSizeInBytes)
-//     size_t*: its width differs across targets
 void Koto_ma_sound_config_init(KotoMa_sound_config* out);
 void Koto_ma_sound_config_init_2(KotoMa_engine* pEngine, KotoMa_sound_config* out);
 void Koto_ma_engine_config_init(KotoMa_engine_config* out);
-KotoMa_result Koto_ma_engine_init(const KotoMa_engine_config* pConfig, KotoMa_engine* pEngine);
-void Koto_ma_engine_uninit(KotoMa_engine* pEngine);
+// handwritten in manual/ Koto_ma_engine_init: static ma_result ::ma_engine_init(const ma_engine_config * pConfig, ma_engine * pEngine)
+// handwritten in manual/ Koto_ma_engine_uninit: static void ::ma_engine_uninit(ma_engine * pEngine)
 KotoMa_result Koto_ma_engine_read_pcm_frames(KotoMa_engine* pEngine, void* pFramesOut, uint64_t frameCount, unsigned long long* pFramesRead);
 KotoMa_resource_manager* Koto_ma_engine_get_resource_manager(KotoMa_engine* pEngine);
 KotoMa_device* Koto_ma_engine_get_device(KotoMa_engine* pEngine);
@@ -247,8 +237,8 @@ KotoMa_result Koto_ma_engine_play_sound(KotoMa_engine* pEngine, const char* pFil
 KotoMa_result Koto_ma_sound_init_from_file(KotoMa_engine* pEngine, const char* pFilePath, uint32_t flags, KotoMa_sound* pGroup, KotoMa_fence* pDoneFence, KotoMa_sound* pSound);
 KotoMa_result Koto_ma_sound_init_copy(KotoMa_engine* pEngine, const KotoMa_sound* pExistingSound, uint32_t flags, KotoMa_sound* pGroup, KotoMa_sound* pSound);
 KotoMa_result Koto_ma_sound_init_from_data_source(KotoMa_engine* pEngine, void* pDataSource, uint32_t flags, KotoMa_sound* pGroup, KotoMa_sound* pSound);
-KotoMa_result Koto_ma_sound_init_ex(KotoMa_engine* pEngine, const KotoMa_sound_config* pConfig, KotoMa_sound* pSound);
-void Koto_ma_sound_uninit(KotoMa_sound* pSound);
+// handwritten in manual/ Koto_ma_sound_init_ex: static ma_result ::ma_sound_init_ex(ma_engine * pEngine, const ma_sound_config * pConfig, ma_sound * pSound)
+// handwritten in manual/ Koto_ma_sound_uninit: static void ::ma_sound_uninit(ma_sound * pSound)
 KotoMa_engine* Koto_ma_sound_get_engine(const KotoMa_sound* pSound);
 void* Koto_ma_sound_get_data_source(const KotoMa_sound* pSound);
 KotoMa_result Koto_ma_sound_start(KotoMa_sound* pSound);
@@ -323,8 +313,7 @@ KotoMa_result Koto_ma_sound_get_cursor_in_pcm_frames(const KotoMa_sound* pSound,
 KotoMa_result Koto_ma_sound_get_length_in_pcm_frames(const KotoMa_sound* pSound, unsigned long long* pLength);
 KotoMa_result Koto_ma_sound_get_cursor_in_seconds(const KotoMa_sound* pSound, float* pCursor);
 KotoMa_result Koto_ma_sound_get_length_in_seconds(const KotoMa_sound* pSound, float* pLength);
-// TODO(handwritten) Koto_ma_sound_set_end_callback: static ma_result ::ma_sound_set_end_callback(ma_sound * pSound, ma_sound_end_proc callback, void * pUserData)
-//     void (*)(void *, ma_sound *): takes C++ types
+// handwritten in manual/ Koto_ma_sound_set_end_callback: static ma_result ::ma_sound_set_end_callback(ma_sound * pSound, ma_sound_end_proc callback, void * pUserData)
 KotoMa_result Koto_ma_sound_group_init(KotoMa_engine* pEngine, uint32_t flags, KotoMa_sound* pParentGroup, KotoMa_sound* pGroup);
 KotoMa_result Koto_ma_sound_group_init_ex(KotoMa_engine* pEngine, const KotoMa_sound_config* pConfig, KotoMa_sound* pGroup);
 void Koto_ma_sound_group_uninit(KotoMa_sound* pGroup);

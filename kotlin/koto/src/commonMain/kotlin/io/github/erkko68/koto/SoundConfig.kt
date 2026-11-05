@@ -10,8 +10,9 @@ class SoundConfig internal constructor(val soundConfigHandle: NativePointer, own
     override fun close() =
         closeOnce { KotoMa_sound_config_destroy(soundConfigHandle) }
 
-    val filePath: String?
+    var filePath: String?
         get() = stringFromInterop(KotoMa_sound_config_GetFilePath(soundConfigHandle))
+        set(value) = interopScope { KotoMa_sound_config_SetFilePath(soundConfigHandle, toInterop(value)) }
 
     var dataSource: NativePointer
         get() = KotoMa_sound_config_GetDataSource(soundConfigHandle)
@@ -95,8 +96,11 @@ class SoundConfig internal constructor(val soundConfigHandle: NativePointer, own
         }
         set(value) = KotoMa_sound_config_SetLoopPointEndInPCMFrames(soundConfigHandle, value)
 
-    val endCallbackUserData: NativePointer
-        get() = KotoMa_sound_config_GetEndCallbackUserData(soundConfigHandle)
+    fun setEndCallback(value: ((Sound?) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Sound(it) }) })
+            KotoMa_sound_config_SetEndCallback(soundConfigHandle, Upcalls.function, valueUser)
+        }
 
     var pitchResampling: ResamplerConfig
         get() = run {

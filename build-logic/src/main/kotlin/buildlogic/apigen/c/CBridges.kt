@@ -92,11 +92,12 @@ internal class CBridges(
             indirection = aliased.indirection.single()
         }
         val bridge = DirectBridges(config, names, const, indirection, result, lvalue)
+        if (isArray(target) && shape(target.args.single().spelling).let { it.base == "char" && it.indirection.isEmpty() }) return text(bridge)
         if (isArray(target)) return sequence(target, bridge)
         if (target.kind == Kind.TEMPLATE_PARAMETER) {
             return bridge.builtin(templates.argument(target.decl!!) ?: throw Unsupported("${type.spelling}: template parameter"))
         }
-        if (target.kind == Kind.FUNCTION && lastAlias != null && indirection != "&") return functionPointer(lastAlias, target, indirection == "*")
+        if (target.kind == Kind.FUNCTION && lastAlias != null && indirection != "&") return functionPointer(lastAlias, target, indirection == "*", result)
         val decl = target.decl?.let { config.types.custom.canonical(it, target) { spelling -> templates.substitute(spelling, lastAlias.orEmpty()) } }
         decl?.let { config.types.custom.bridge(it, target, alias, bridge) }?.let { custom ->
             custom.typedef?.let { callbackTypes += it }
@@ -123,6 +124,13 @@ internal class CBridges(
             }
             else -> throw Unsupported("${type.spelling}: $decl")
         }
+    }
+
+    /** A `char[N]`, a NUL-terminated string in place: read where it is, and set truncated to fit, still terminated. */
+    private fun text(bridge: DirectBridges): CBridge {
+        if (bridge.result && !bridge.lvalue) throw Unsupported("char array: as a result by value")
+        return CBridge("const char*", { it }, value = CValue.Text,
+            assign = { field, v -> "std::snprintf($field, sizeof($field), \"%s\", $v ? $v : \"\");" })
     }
 
     /** The record [type] names, when C has a handle for it. */
@@ -274,14 +282,44 @@ internal class CBridges(
 
     /**
      * A function pointer alias, or a pointer to a function type alias ([pointer]), whose parameters are all C types: C
-     * declares the same pointer type under the alias's name.
+     * declares the same pointer type under the alias's name. One taking the library's types is a [trampoline] parameter.
      */
-    private fun functionPointer(alias: String, type: CppType, pointer: Boolean): CBridge {
+    private fun functionPointer(alias: String, type: CppType, pointer: Boolean, result: Boolean): CBridge {
         if (!pointer && "(*" !in NULLABILITY.replace(type.spelling, "").replace(" ", "")) throw Unsupported("${type.spelling}: function type")
-        if (type.args.any { !CAbi.isBuiltin(shape(it.spelling).base) }) throw Unsupported("${type.spelling}: takes C++ types")
+        if (type.args.any { !CAbi.isBuiltin(shape(it.spelling).base) }) {
+            if (result) throw Unsupported("${type.spelling}: a C function, which nothing outside C calls", skipped = true)
+            return trampoline(alias, type)
+        }
         val name = names.type(alias)
         val params = type.args.drop(1).joinToString { cSpelling(it.spelling) }.ifEmpty { "void" }
         callbackTypes[name] = "typedef ${cSpelling(type.args.first().spelling)} (*$name)($params);"
         return CBridge(name, { it })
+    }
+
+    /**
+     * Argument [i] of a [trampoline]: a pointer to samples, which the callee reads or writes in place, is the pointer;
+     * a size it writes (`size_t*`), which the function returns, points at a `uint64_t` the trampoline copies back.
+     */
+    private fun trampolineSlot(type: CppType, i: Int): Slot {
+        val s = shape(type.spelling)
+        if (s.indirection == listOf("*") && CAbi.isBuiltin(s.base) && s.base != "char") {
+            if (CAbi.targetWidth(s.base) && !s.const) return Slot("", "p$i", CValue.InOut(CValue.Builtin(CAbi.element(s.base)), written = true))
+            if (s.base != "void") return Slot("", "p$i", CValue.Opaque)
+        }
+        return slot(type, i)
+    }
+
+    /**
+     * A C callback [type] taking the library's types, as a `std::function` crosses: C passes an `Upcall` and its user
+     * data, and the function is called with its arguments in slots, less a `void*` first or last, which is the user
+     * data the library hands back. What calls the `Upcall` is the [CBridge.trampoline] `manual/` writes.
+     */
+    private fun trampoline(alias: String, type: CppType): CBridge {
+        val params = type.args.drop(1)
+        val user = listOf(0, params.lastIndex).firstOrNull { i -> params.getOrNull(i)?.let { shape(it.spelling) }?.let { !it.const && it.base == "void" && it.indirection == listOf("*") } == true }
+        val args = params.filterIndexed { i, _ -> i != user }.mapIndexed { i, t -> trampolineSlot(t, i) }
+        val returns = type.args.first().let { r -> if (param(r).value == CValue.Opaque) param(r) else slotResult(r, "$alias: returns ${r.spelling}") }
+        val upcall = upcallType()
+        return CBridge(upcall, { it }, extra = CBridge.USER, value = CValue.Function(upcall, args.map { it.holds }, returns?.value), trampoline = true)
     }
 }

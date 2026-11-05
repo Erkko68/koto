@@ -16,9 +16,6 @@ internal external fun Koto_ma_data_source_config_init(out: NativePointer)
 @ExternalSymbolName("Koto_ma_data_source_init")
 internal external fun Koto_ma_data_source_init(pConfig: NativePointer, pDataSource: NativePointer): Int
 
-@ExternalSymbolName("Koto_ma_data_source_uninit")
-internal external fun Koto_ma_data_source_uninit(pDataSource: NativePointer)
-
 @ExternalSymbolName("Koto_ma_data_source_read_pcm_frames")
 internal external fun Koto_ma_data_source_read_pcm_frames(pDataSource: NativePointer, pFramesOut: NativePointer, frameCount: Long, pFramesRead: NativePointer): Int
 
@@ -91,12 +88,6 @@ internal external fun Koto_ma_audio_buffer_init_copy(pConfig: NativePointer, pAu
 @ExternalSymbolName("Koto_ma_audio_buffer_alloc_and_init")
 internal external fun Koto_ma_audio_buffer_alloc_and_init(pConfig: NativePointer, ppAudioBuffer: NativePointer): Int
 
-@ExternalSymbolName("Koto_ma_audio_buffer_uninit")
-internal external fun Koto_ma_audio_buffer_uninit(pAudioBuffer: NativePointer)
-
-@ExternalSymbolName("Koto_ma_audio_buffer_uninit_and_free")
-internal external fun Koto_ma_audio_buffer_uninit_and_free(pAudioBuffer: NativePointer)
-
 @ExternalSymbolName("Koto_ma_audio_buffer_read_pcm_frames")
 internal external fun Koto_ma_audio_buffer_read_pcm_frames(pAudioBuffer: NativePointer, pFramesOut: NativePointer, frameCount: Long, loop: Boolean, out: NativePointer)
 
@@ -166,20 +157,14 @@ internal external fun Koto_ma_context_is_loopback_supported(pContext: NativePoin
 @ExternalSymbolName("Koto_ma_device_config_init")
 internal external fun Koto_ma_device_config_init(deviceType: Int, out: NativePointer)
 
-@ExternalSymbolName("Koto_ma_device_init")
-internal external fun Koto_ma_device_init(pContext: NativePointer, pConfig: NativePointer, pDevice: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_device_init_ex")
-internal external fun Koto_ma_device_init_ex(backends: NativePointer, backendCount: Int, pContextConfig: NativePointer, pConfig: NativePointer, pDevice: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_device_uninit")
-internal external fun Koto_ma_device_uninit(pDevice: NativePointer)
-
 @ExternalSymbolName("Koto_ma_device_get_context")
 internal external fun Koto_ma_device_get_context(pDevice: NativePointer): NativePointer
 
 @ExternalSymbolName("Koto_ma_device_get_log")
 internal external fun Koto_ma_device_get_log(pDevice: NativePointer): NativePointer
+
+@ExternalSymbolName("Koto_ma_device_get_info")
+internal external fun Koto_ma_device_get_info(pDevice: NativePointer, type: Int, pDeviceInfo: NativePointer): Int
 
 @ExternalSymbolName("Koto_ma_device_start")
 internal external fun Koto_ma_device_start(pDevice: NativePointer): Int
@@ -214,17 +199,11 @@ internal external fun Koto_ma_decoder_config_init(outputFormat: Int, outputChann
 @ExternalSymbolName("Koto_ma_decoder_config_init_default")
 internal external fun Koto_ma_decoder_config_init_default(out: NativePointer)
 
-@ExternalSymbolName("Koto_ma_decoder_init_memory")
-internal external fun Koto_ma_decoder_init_memory(pData: NativePointer, dataSize: Int, pConfig: NativePointer, pDecoder: NativePointer): Int
-
 @ExternalSymbolName("Koto_ma_decoder_init_vfs")
 internal external fun Koto_ma_decoder_init_vfs(pVFS: NativePointer, pFilePath: NativePointer, pConfig: NativePointer, pDecoder: NativePointer): Int
 
 @ExternalSymbolName("Koto_ma_decoder_init_file")
 internal external fun Koto_ma_decoder_init_file(pFilePath: NativePointer, pConfig: NativePointer, pDecoder: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_decoder_uninit")
-internal external fun Koto_ma_decoder_uninit(pDecoder: NativePointer): Int
 
 @ExternalSymbolName("Koto_ma_decoder_read_pcm_frames")
 internal external fun Koto_ma_decoder_read_pcm_frames(pDecoder: NativePointer, pFramesOut: NativePointer, frameCount: Long, pFramesRead: NativePointer): Int
@@ -253,9 +232,6 @@ internal external fun Koto_ma_encoder_init_vfs(pVFS: NativePointer, pFilePath: N
 @ExternalSymbolName("Koto_ma_encoder_init_file")
 internal external fun Koto_ma_encoder_init_file(pFilePath: NativePointer, pConfig: NativePointer, pEncoder: NativePointer): Int
 
-@ExternalSymbolName("Koto_ma_encoder_uninit")
-internal external fun Koto_ma_encoder_uninit(pEncoder: NativePointer)
-
 @ExternalSymbolName("Koto_ma_encoder_write_pcm_frames")
 internal external fun Koto_ma_encoder_write_pcm_frames(pEncoder: NativePointer, pFramesIn: NativePointer, frameCount: Long, pFramesWritten: NativePointer): Int
 
@@ -264,9 +240,6 @@ internal external fun Koto_ma_waveform_config_init(format: Int, channels: Int, s
 
 @ExternalSymbolName("Koto_ma_waveform_init")
 internal external fun Koto_ma_waveform_init(pConfig: NativePointer, pWaveform: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_waveform_uninit")
-internal external fun Koto_ma_waveform_uninit(pWaveform: NativePointer)
 
 @ExternalSymbolName("Koto_ma_waveform_read_pcm_frames")
 internal external fun Koto_ma_waveform_read_pcm_frames(pWaveform: NativePointer, pFramesOut: NativePointer, frameCount: Long, pFramesRead: NativePointer): Int
@@ -292,9 +265,6 @@ internal external fun Koto_ma_pulsewave_config_init(format: Int, channels: Int, 
 @ExternalSymbolName("Koto_ma_pulsewave_init")
 internal external fun Koto_ma_pulsewave_init(pConfig: NativePointer, pWaveform: NativePointer): Int
 
-@ExternalSymbolName("Koto_ma_pulsewave_uninit")
-internal external fun Koto_ma_pulsewave_uninit(pWaveform: NativePointer)
-
 @ExternalSymbolName("Koto_ma_pulsewave_read_pcm_frames")
 internal external fun Koto_ma_pulsewave_read_pcm_frames(pWaveform: NativePointer, pFramesOut: NativePointer, frameCount: Long, pFramesRead: NativePointer): Int
 
@@ -316,14 +286,8 @@ internal external fun Koto_ma_pulsewave_set_duty_cycle(pWaveform: NativePointer,
 @ExternalSymbolName("Koto_ma_noise_config_init")
 internal external fun Koto_ma_noise_config_init(format: Int, channels: Int, type: Int, seed: Int, amplitude: Double, out: NativePointer)
 
-@ExternalSymbolName("Koto_ma_noise_init_preallocated")
-internal external fun Koto_ma_noise_init_preallocated(pConfig: NativePointer, pHeap: NativePointer, pNoise: NativePointer): Int
-
 @ExternalSymbolName("Koto_ma_noise_init")
 internal external fun Koto_ma_noise_init(pConfig: NativePointer, pAllocationCallbacks: NativePointer, pNoise: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_noise_uninit")
-internal external fun Koto_ma_noise_uninit(pNoise: NativePointer, pAllocationCallbacks: NativePointer)
 
 @ExternalSymbolName("Koto_ma_noise_read_pcm_frames")
 internal external fun Koto_ma_noise_read_pcm_frames(pNoise: NativePointer, pFramesOut: NativePointer, frameCount: Long, pFramesRead: NativePointer): Int
@@ -346,20 +310,11 @@ internal external fun Koto_ma_resource_manager_config_init(out: NativePointer)
 @ExternalSymbolName("Koto_ma_resource_manager_init")
 internal external fun Koto_ma_resource_manager_init(pConfig: NativePointer, pResourceManager: NativePointer): Int
 
-@ExternalSymbolName("Koto_ma_resource_manager_uninit")
-internal external fun Koto_ma_resource_manager_uninit(pResourceManager: NativePointer)
-
 @ExternalSymbolName("Koto_ma_resource_manager_get_log")
 internal external fun Koto_ma_resource_manager_get_log(pResourceManager: NativePointer): NativePointer
 
 @ExternalSymbolName("Koto_ma_resource_manager_register_file")
 internal external fun Koto_ma_resource_manager_register_file(pResourceManager: NativePointer, pFilePath: NativePointer, flags: Int): Int
-
-@ExternalSymbolName("Koto_ma_resource_manager_register_decoded_data")
-internal external fun Koto_ma_resource_manager_register_decoded_data(pResourceManager: NativePointer, pName: NativePointer, pData: NativePointer, frameCount: Long, format: Int, channels: Int, sampleRate: Int): Int
-
-@ExternalSymbolName("Koto_ma_resource_manager_register_encoded_data")
-internal external fun Koto_ma_resource_manager_register_encoded_data(pResourceManager: NativePointer, pName: NativePointer, pData: NativePointer, sizeInBytes: Int): Int
 
 @ExternalSymbolName("Koto_ma_resource_manager_unregister_file")
 internal external fun Koto_ma_resource_manager_unregister_file(pResourceManager: NativePointer, pFilePath: NativePointer): Int
@@ -550,12 +505,6 @@ internal external fun Koto_ma_sound_config_init_2(pEngine: NativePointer, out: N
 @ExternalSymbolName("Koto_ma_engine_config_init")
 internal external fun Koto_ma_engine_config_init(out: NativePointer)
 
-@ExternalSymbolName("Koto_ma_engine_init")
-internal external fun Koto_ma_engine_init(pConfig: NativePointer, pEngine: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_engine_uninit")
-internal external fun Koto_ma_engine_uninit(pEngine: NativePointer)
-
 @ExternalSymbolName("Koto_ma_engine_read_pcm_frames")
 internal external fun Koto_ma_engine_read_pcm_frames(pEngine: NativePointer, pFramesOut: NativePointer, frameCount: Long, pFramesRead: NativePointer): Int
 
@@ -669,12 +618,6 @@ internal external fun Koto_ma_sound_init_copy(pEngine: NativePointer, pExistingS
 
 @ExternalSymbolName("Koto_ma_sound_init_from_data_source")
 internal external fun Koto_ma_sound_init_from_data_source(pEngine: NativePointer, pDataSource: NativePointer, flags: Int, pGroup: NativePointer, pSound: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_sound_init_ex")
-internal external fun Koto_ma_sound_init_ex(pEngine: NativePointer, pConfig: NativePointer, pSound: NativePointer): Int
-
-@ExternalSymbolName("Koto_ma_sound_uninit")
-internal external fun Koto_ma_sound_uninit(pSound: NativePointer)
 
 @ExternalSymbolName("Koto_ma_sound_get_engine")
 internal external fun Koto_ma_sound_get_engine(pSound: NativePointer): NativePointer

@@ -45,6 +45,9 @@ internal class Records(
         else -> (type.kind == Kind.BUILTIN && shape(type.spelling).indirection.isNotEmpty()) || type.decl == "std::string_view" || type.decl in config.types.views
     }
 
+    /** A `const char*`, which a struct's setter keeps a copy of. */
+    fun keepsText(type: CppType) = shape(type.spelling).let { it.const && it.indirection == listOf("*") && it.base == "char" }
+
     /** Records the API's functions and constructors take. */
     private val parameterTypes = (api.functions + api.records.values.flatMap { r -> r.methods.filter { it.isPublic && it.isApi } }).map { it.params }
         .plus(api.records.values.flatMap { it.constructors })

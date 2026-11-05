@@ -17,22 +17,17 @@ KotoMa_thread_priority KotoMa_context_config_GetThreadPriority(const KotoMa_cont
 void KotoMa_context_config_SetThreadPriority(KotoMa_context_config* self, KotoMa_thread_priority value);
 uint32_t KotoMa_context_config_GetThreadStackSize(const KotoMa_context_config* self);
 void KotoMa_context_config_SetThreadStackSize(KotoMa_context_config* self, uint32_t value);
-void* KotoMa_context_config_GetUserData(const KotoMa_context_config* self);
-// TODO(handwritten) KotoMa_context_config_SetUserData: void * ma_context_config::pUserData
-//     void *: the struct would keep the caller's pointer
+// skipped ma_context_config::pUserData: ma_(context_config::pUserData|decoder_config::pCustomBackendUserData|resource_manager_config::pCustomDecodingBackendUserData|resampler_config::pBackendUserData)
 void KotoMa_context_config_GetAllocationCallbacks(const KotoMa_context_config* self, KotoMa_allocation_callbacks* out);
 void KotoMa_context_config_SetAllocationCallbacks(KotoMa_context_config* self, const KotoMa_allocation_callbacks* value);
 void* KotoMa_context_config_GetDsound_hWnd(const KotoMa_context_config* self);
-// TODO(handwritten) KotoMa_context_config_SetDsound_hWnd: ma_handle ma_context_config::dsound.hWnd
-//     ma_handle: the struct would keep the caller's pointer
+void KotoMa_context_config_SetDsound_hWnd(KotoMa_context_config* self, void* value);
 bool KotoMa_context_config_GetAlsa_useVerboseDeviceEnumeration(const KotoMa_context_config* self);
 void KotoMa_context_config_SetAlsa_useVerboseDeviceEnumeration(KotoMa_context_config* self, bool value);
 const char* KotoMa_context_config_GetPulse_pApplicationName(const KotoMa_context_config* self);
-// TODO(handwritten) KotoMa_context_config_SetPulse_pApplicationName: const char * ma_context_config::pulse.pApplicationName
-//     const char *: the struct would keep the caller's pointer
+void KotoMa_context_config_SetPulse_pApplicationName(KotoMa_context_config* self, const char* value);
 const char* KotoMa_context_config_GetPulse_pServerName(const KotoMa_context_config* self);
-// TODO(handwritten) KotoMa_context_config_SetPulse_pServerName: const char * ma_context_config::pulse.pServerName
-//     const char *: the struct would keep the caller's pointer
+void KotoMa_context_config_SetPulse_pServerName(KotoMa_context_config* self, const char* value);
 bool KotoMa_context_config_GetPulse_tryAutoSpawn(const KotoMa_context_config* self);
 void KotoMa_context_config_SetPulse_tryAutoSpawn(KotoMa_context_config* self, bool value);
 KotoMa_ios_session_category KotoMa_context_config_GetCoreaudio_sessionCategory(const KotoMa_context_config* self);
@@ -44,8 +39,7 @@ void KotoMa_context_config_SetCoreaudio_noAudioSessionActivate(KotoMa_context_co
 bool KotoMa_context_config_GetCoreaudio_noAudioSessionDeactivate(const KotoMa_context_config* self);
 void KotoMa_context_config_SetCoreaudio_noAudioSessionDeactivate(KotoMa_context_config* self, bool value);
 const char* KotoMa_context_config_GetJack_pClientName(const KotoMa_context_config* self);
-// TODO(handwritten) KotoMa_context_config_SetJack_pClientName: const char * ma_context_config::jack.pClientName
-//     const char *: the struct would keep the caller's pointer
+void KotoMa_context_config_SetJack_pClientName(KotoMa_context_config* self, const char* value);
 bool KotoMa_context_config_GetJack_tryStartServer(const KotoMa_context_config* self);
 void KotoMa_context_config_SetJack_tryStartServer(KotoMa_context_config* self, bool value);
 // skipped ma_context_config::custom: uses ma_backend_callbacks

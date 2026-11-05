@@ -11,8 +11,8 @@ extern "C" {
 // ma_hishelf_node
 KotoMa_hishelf_node* KotoMa_hishelf_node_create(void);
 void KotoMa_hishelf_node_destroy(KotoMa_hishelf_node* self);
-// skipped ma_hishelf_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_hishelf_node::hishelf: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_hishelf_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_hishelf_node::hishelf: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

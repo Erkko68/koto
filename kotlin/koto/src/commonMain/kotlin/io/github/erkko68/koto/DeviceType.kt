@@ -5,10 +5,10 @@ import io.github.erkko68.koto.capi.*
 import io.github.erkko68.koto.interop.*
 
 enum class DeviceType(internal val value: Int) {
-    PLAYBACK(0),
-    CAPTURE(1),
-    DUPLEX(2),
-    LOOPBACK(3);
+    PLAYBACK(1),
+    CAPTURE(2),
+    DUPLEX(3),
+    LOOPBACK(4);
 
     internal companion object {
         fun of(value: Int) = entries.first { it.value == value }

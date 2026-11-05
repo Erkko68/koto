@@ -11,8 +11,8 @@ extern "C" {
 // ma_notch_node
 KotoMa_notch_node* KotoMa_notch_node_create(void);
 void KotoMa_notch_node_destroy(KotoMa_notch_node* self);
-// skipped ma_notch_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_notch_node::notch: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_notch_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_notch_node::notch: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

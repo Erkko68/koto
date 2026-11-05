@@ -50,8 +50,23 @@ class DeviceConfig internal constructor(val deviceConfigHandle: NativePointer, o
         get() = KotoMa_device_config_GetNoFixedSizedCallback(deviceConfigHandle)
         set(value) = KotoMa_device_config_SetNoFixedSizedCallback(deviceConfigHandle, value)
 
-    val userData: NativePointer
-        get() = KotoMa_device_config_GetUserData(deviceConfigHandle)
+    fun setDataCallback(value: ((Device?, NativePointer, NativePointer, Int) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Device(it) }, readPointerSlot(args, 1), readPointerSlot(args, 2), readSlot(args, 3).toInt()) })
+            KotoMa_device_config_SetDataCallback(deviceConfigHandle, Upcalls.function, valueUser)
+        }
+
+    fun setNotificationCallback(value: ((DeviceNotification?) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { DeviceNotification(it) }) })
+            KotoMa_device_config_SetNotificationCallback(deviceConfigHandle, Upcalls.function, valueUser)
+        }
+
+    fun setStopCallback(value: ((Device?) -> Unit)?) =
+        run {
+            val valueUser = if (value == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> value(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Device(it) }) })
+            KotoMa_device_config_SetStopCallback(deviceConfigHandle, Upcalls.function, valueUser)
+        }
 
     var resampling: ResamplerConfig
         get() = run {
@@ -159,11 +174,13 @@ class DeviceConfig internal constructor(val deviceConfigHandle: NativePointer, o
         get() = KotoMa_device_config_GetAlsa_noAutoResample(deviceConfigHandle)
         set(value) = KotoMa_device_config_SetAlsa_noAutoResample(deviceConfigHandle, value)
 
-    val pulsePStreamNamePlayback: String?
+    var pulsePStreamNamePlayback: String?
         get() = stringFromInterop(KotoMa_device_config_GetPulse_pStreamNamePlayback(deviceConfigHandle))
+        set(value) = interopScope { KotoMa_device_config_SetPulse_pStreamNamePlayback(deviceConfigHandle, toInterop(value)) }
 
-    val pulsePStreamNameCapture: String?
+    var pulsePStreamNameCapture: String?
         get() = stringFromInterop(KotoMa_device_config_GetPulse_pStreamNameCapture(deviceConfigHandle))
+        set(value) = interopScope { KotoMa_device_config_SetPulse_pStreamNameCapture(deviceConfigHandle, toInterop(value)) }
 
     var pulseChannelMap: Int
         get() = KotoMa_device_config_GetPulse_channelMap(deviceConfigHandle)

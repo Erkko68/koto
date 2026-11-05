@@ -32,8 +32,9 @@ class AudioBufferConfig internal constructor(val audioBufferConfigHandle: Native
         }
         set(value) = KotoMa_audio_buffer_config_SetSizeInFrames(audioBufferConfigHandle, value)
 
-    val data: NativePointer
+    var data: NativePointer
         get() = KotoMa_audio_buffer_config_GetData(audioBufferConfigHandle)
+        set(value) = KotoMa_audio_buffer_config_SetData(audioBufferConfigHandle, value)
 
     var allocationCallbacks: AllocationCallbacks
         get() = run {

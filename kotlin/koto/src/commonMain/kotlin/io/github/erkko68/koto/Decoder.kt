@@ -66,10 +66,20 @@ class Decoder internal constructor(val decoderHandle: NativePointer, owned: Bool
         }
 
     companion object {
-        fun initMemory(data: NativePointer, dataSize: Int, config: DecoderConfig?): Decoder =
+        fun init(onRead: ((Decoder?, NativePointer, Int) -> Pair<Result, Int>)?, onSeek: ((Decoder?, Long, SeekOrigin) -> Result)?, config: DecoderConfig?): Decoder =
             run {
+                val onReadUser = if (onRead == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> val returned = onRead(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Decoder(it) }, readPointerSlot(args, 1), readSlot(args, 2).toInt()); writeSlot(result, returned.first.value.toLong()); writeSlot(readPointerSlot(args, 3), returned.second.toLong()) })
+                val onSeekUser = if (onSeek == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> val returned = onSeek(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Decoder(it) }, readSlot(args, 1), SeekOrigin.of(readSlot(args, 2).toInt())); writeSlot(result, returned.value.toLong()) })
                 val created = KotoMa_decoder_create()
-                checkResult(Koto_ma_decoder_init_memory(data, dataSize, config?.decoderConfigHandle ?: NullPointer, created)) { KotoMa_decoder_destroy(created) }
+                checkResult(Koto_ma_decoder_init(Upcalls.function, onReadUser, Upcalls.function, onSeekUser, config?.decoderConfigHandle ?: NullPointer, created)) { KotoMa_decoder_destroy(created) }
+                val nativeResult = Decoder(created, owned = true)
+                nativeResult
+            }
+
+        fun initMemory(data: ByteArray, config: DecoderConfig?): Decoder =
+            interopScope {
+                val created = KotoMa_decoder_create()
+                checkResult(Koto_ma_decoder_init_memory(toInterop(data), data.size, config?.decoderConfigHandle ?: NullPointer, created)) { KotoMa_decoder_destroy(created) }
                 Decoder(created, owned = true)
             }
 

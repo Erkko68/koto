@@ -11,16 +11,16 @@ extern "C" {
 // ma_encoder
 KotoMa_encoder* KotoMa_encoder_create(void);
 void KotoMa_encoder_destroy(KotoMa_encoder* self);
-// skipped ma_encoder::config: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::onWrite: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::onSeek: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::onInit: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::onUninit: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::onWritePCMFrames: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::pUserData: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::pInternalEncoder: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::data.vfs.pVFS: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_encoder::data.vfs.file: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::config: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::onWrite: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::onSeek: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::onInit: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::onUninit: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::onWritePCMFrames: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::pUserData: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::pInternalEncoder: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::data.vfs.pVFS: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_encoder::data.vfs.file: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

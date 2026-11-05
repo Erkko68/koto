@@ -37,6 +37,9 @@ internal external fun KotoMa_audio_buffer_config_SetSizeInFrames(self: NativePoi
 @ExternalSymbolName("KotoMa_audio_buffer_config_GetData")
 internal external fun KotoMa_audio_buffer_config_GetData(self: NativePointer): NativePointer
 
+@ExternalSymbolName("KotoMa_audio_buffer_config_SetData")
+internal external fun KotoMa_audio_buffer_config_SetData(self: NativePointer, value: NativePointer)
+
 @ExternalSymbolName("KotoMa_audio_buffer_config_GetAllocationCallbacks")
 internal external fun KotoMa_audio_buffer_config_GetAllocationCallbacks(self: NativePointer, out: NativePointer)
 

@@ -44,7 +44,7 @@ on top of it. The API and its behavior are the same everywhere:
 | **Web** | `js`, `wasmJs`, in a browser | miniaudio compiled to wasm with Emscripten, `koto.js` + `koto.wasm` |
 
 On the web, the page includes `koto.js` and waits for `createKotoModule()` before the first call, and a file path means
-one in Emscripten's virtual filesystem.
+one in Emscripten's virtual filesystem: pass the audio as bytes instead.
 
 ## Installation
 
@@ -70,11 +70,26 @@ adapted only where Kotlin has its own shape:
 - **Results, not out-parameters**: `sound.lengthInPcmFrames` returns what `ma_sound_get_length_in_pcm_frames` writes
   through a pointer; a failing `ma_result` throws `NativeException`.
 - **The modules a game uses**: the engine, sounds and groups, the resource manager, the node graph and its effect nodes,
-  decoders and encoders, data sources, devices and contexts. Of those 1155 C functions, 1140 are wrapped;
+  decoders and encoders, data sources, devices and contexts. Of those 1191 C functions, 1176 are wrapped;
   [`c/api-coverage.txt`](c/api-coverage.txt) names the rest. Raw DSP (filters, resamplers, ring buffers, format
   converters) stays out until something needs it: one line in [`c/api-headers.txt`](c/api-headers.txt).
-- **No callbacks yet**: custom data sources and device callbacks run on a realtime thread, where calling into Kotlin
-  risks glitches from GC pauses, and the web has no such thread.
+- **Callbacks are lambdas**: `config.setDataCallback { device, output, input, frameCount -> }`, `setStopCallback`,
+  `setNotificationCallback` on a device's or an engine's config, `engineConfig.setOnProcess { frames, frameCount -> }`,
+  `sound.setEndCallback { }`, `context.enumerateDevices { context, type, info -> true }`, `dataSourceSetNextCallback`,
+  and your own I/O under `Decoder.init(onRead, onSeek, config)` and `Encoder.init(onWrite, onSeek, config)`, where a
+  read or write returns its result and how many bytes it moved. miniaudio keeps each until the object it's set on is
+  closed, a next callback until it or its data source is. The audio ones run on the audio thread, where a GC pause is a
+  glitch: keep them short and allocation-free. A lambda captures what it needs, so the user data miniaudio would hand
+  back isn't bound.
+- **Audio as bytes**: read a file however your app reads files (Compose resources' `Res.readBytes`, kotlinx-io, an
+  Android asset) and hand koto the `ByteArray`, which it copies: `Decoder.initMemory(bytes, config)` decodes its own
+  copy, and `resourceManager.registerEncodedData("shot.wav", bytes)` keeps one until the resource manager closes, for
+  `Sound.initFromFile(engine, "shot.wav", …)` to play by that name. PCM you make is interleaved f32 frames:
+  `resourceManager.registerDecodedData("tone", frames, channels, sampleRate)`, or `AudioBuffer.initCopy(frames,
+  channels)` for a data source. The same code works on every platform, the web included. File paths still work where
+  there's a filesystem.
+- **Strings are copied**: a config keeps its own copy of a string set on it (`soundConfig.filePath`, PulseAudio and
+  JACK names) until it's closed.
 - **Nodes and data sources are pointers**: `ma_node` and `ma_data_source` are `void` in C, so what takes one takes a
   `NativePointer`: an object's `…Handle`.
 

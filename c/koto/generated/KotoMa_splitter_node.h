@@ -11,7 +11,7 @@ extern "C" {
 // ma_splitter_node
 KotoMa_splitter_node* KotoMa_splitter_node_create(void);
 void KotoMa_splitter_node_destroy(KotoMa_splitter_node* self);
-// skipped ma_splitter_node::base: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_splitter_node::base: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

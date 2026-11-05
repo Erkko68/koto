@@ -11,8 +11,8 @@ extern "C" {
 // ma_biquad_node
 KotoMa_biquad_node* KotoMa_biquad_node_create(void);
 void KotoMa_biquad_node_destroy(KotoMa_biquad_node* self);
-// skipped ma_biquad_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_biquad_node::biquad: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_biquad_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_biquad_node::biquad: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

@@ -34,9 +34,7 @@ void KotoMa_resource_manager_config_SetVFS(KotoMa_resource_manager_config* self,
 // skipped ma_resource_manager_config::ppCustomDecodingBackendVTables: uses ma_decoding_backend_vtable
 uint32_t KotoMa_resource_manager_config_GetCustomDecodingBackendCount(const KotoMa_resource_manager_config* self);
 void KotoMa_resource_manager_config_SetCustomDecodingBackendCount(KotoMa_resource_manager_config* self, uint32_t value);
-void* KotoMa_resource_manager_config_GetCustomDecodingBackendUserData(const KotoMa_resource_manager_config* self);
-// TODO(handwritten) KotoMa_resource_manager_config_SetCustomDecodingBackendUserData: void * ma_resource_manager_config::pCustomDecodingBackendUserData
-//     void *: the struct would keep the caller's pointer
+// skipped ma_resource_manager_config::pCustomDecodingBackendUserData: ma_(context_config::pUserData|decoder_config::pCustomBackendUserData|resource_manager_config::pCustomDecodingBackendUserData|resampler_config::pBackendUserData)
 void KotoMa_resource_manager_config_GetResampling(const KotoMa_resource_manager_config* self, KotoMa_resampler_config* out);
 void KotoMa_resource_manager_config_SetResampling(KotoMa_resource_manager_config* self, const KotoMa_resampler_config* value);
 

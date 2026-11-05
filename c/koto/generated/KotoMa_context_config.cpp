@@ -9,6 +9,7 @@ KotoMa_context_config* KotoMa_context_config_create(void) {
 }
 
 void KotoMa_context_config_destroy(KotoMa_context_config* self) {
+    koto::forget(koto::cpp(self), sizeof(*koto::cpp(self)));
     delete koto::cpp(self);
 }
 
@@ -36,10 +37,6 @@ void KotoMa_context_config_SetThreadStackSize(KotoMa_context_config* self, uint3
     koto::cpp(self)->threadStackSize = static_cast<size_t>(value);
 }
 
-void* KotoMa_context_config_GetUserData(const KotoMa_context_config* self) {
-    return koto::cpp(self)->pUserData;
-}
-
 void KotoMa_context_config_GetAllocationCallbacks(const KotoMa_context_config* self, KotoMa_allocation_callbacks* out) {
     *koto::cpp(out) = koto::cpp(self)->allocationCallbacks;
 }
@@ -50,6 +47,10 @@ void KotoMa_context_config_SetAllocationCallbacks(KotoMa_context_config* self, c
 
 void* KotoMa_context_config_GetDsound_hWnd(const KotoMa_context_config* self) {
     return koto::cpp(self)->dsound.hWnd;
+}
+
+void KotoMa_context_config_SetDsound_hWnd(KotoMa_context_config* self, void* value) {
+    koto::cpp(self)->dsound.hWnd = value;
 }
 
 bool KotoMa_context_config_GetAlsa_useVerboseDeviceEnumeration(const KotoMa_context_config* self) {
@@ -64,8 +65,16 @@ const char* KotoMa_context_config_GetPulse_pApplicationName(const KotoMa_context
     return koto::cpp(self)->pulse.pApplicationName;
 }
 
+void KotoMa_context_config_SetPulse_pApplicationName(KotoMa_context_config* self, const char* value) {
+    koto::cpp(self)->pulse.pApplicationName = koto::keep(&koto::cpp(self)->pulse.pApplicationName, value);
+}
+
 const char* KotoMa_context_config_GetPulse_pServerName(const KotoMa_context_config* self) {
     return koto::cpp(self)->pulse.pServerName;
+}
+
+void KotoMa_context_config_SetPulse_pServerName(KotoMa_context_config* self, const char* value) {
+    koto::cpp(self)->pulse.pServerName = koto::keep(&koto::cpp(self)->pulse.pServerName, value);
 }
 
 bool KotoMa_context_config_GetPulse_tryAutoSpawn(const KotoMa_context_config* self) {
@@ -110,6 +119,10 @@ void KotoMa_context_config_SetCoreaudio_noAudioSessionDeactivate(KotoMa_context_
 
 const char* KotoMa_context_config_GetJack_pClientName(const KotoMa_context_config* self) {
     return koto::cpp(self)->jack.pClientName;
+}
+
+void KotoMa_context_config_SetJack_pClientName(KotoMa_context_config* self, const char* value) {
+    koto::cpp(self)->jack.pClientName = koto::keep(&koto::cpp(self)->jack.pClientName, value);
 }
 
 bool KotoMa_context_config_GetJack_tryStartServer(const KotoMa_context_config* self) {

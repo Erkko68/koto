@@ -40,9 +40,6 @@ internal external fun KotoMa_resampler_config_GetAlgorithm(self: NativePointer):
 @ExternalSymbolName("KotoMa_resampler_config_SetAlgorithm")
 internal external fun KotoMa_resampler_config_SetAlgorithm(self: NativePointer, value: Int)
 
-@ExternalSymbolName("KotoMa_resampler_config_GetBackendUserData")
-internal external fun KotoMa_resampler_config_GetBackendUserData(self: NativePointer): NativePointer
-
 @ExternalSymbolName("KotoMa_resampler_config_GetLinear_lpfOrder")
 internal external fun KotoMa_resampler_config_GetLinear_lpfOrder(self: NativePointer): Int
 

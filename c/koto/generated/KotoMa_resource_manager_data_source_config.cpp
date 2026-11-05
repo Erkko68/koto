@@ -9,11 +9,16 @@ KotoMa_resource_manager_data_source_config* KotoMa_resource_manager_data_source_
 }
 
 void KotoMa_resource_manager_data_source_config_destroy(KotoMa_resource_manager_data_source_config* self) {
+    koto::forget(koto::cpp(self), sizeof(*koto::cpp(self)));
     delete koto::cpp(self);
 }
 
 const char* KotoMa_resource_manager_data_source_config_GetFilePath(const KotoMa_resource_manager_data_source_config* self) {
     return koto::cpp(self)->pFilePath;
+}
+
+void KotoMa_resource_manager_data_source_config_SetFilePath(KotoMa_resource_manager_data_source_config* self, const char* value) {
+    koto::cpp(self)->pFilePath = koto::keep(&koto::cpp(self)->pFilePath, value);
 }
 
 void KotoMa_resource_manager_data_source_config_GetInitialSeekPointInPCMFrames(const KotoMa_resource_manager_data_source_config* self, uint64_t* out) {

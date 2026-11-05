@@ -279,6 +279,12 @@ class Sound internal constructor(val soundHandle: NativePointer, owned: Boolean 
             lengthArray.readF32(0)
         }
 
+    fun setEndCallback(callback: ((Sound?) -> Unit)?) =
+        run {
+            val callbackUser = if (callback == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> callback(readPointerSlot(args, 0).takeIf { it != NullPointer }?.let { Sound(it) }) })
+            checkResult(Koto_ma_sound_set_end_callback(soundHandle, Upcalls.function, callbackUser))
+        }
+
     companion object {
         fun initFromFile(engine: Engine?, filePath: String?, flags: Int, group: Sound?, doneFence: Fence?): Sound =
             interopScope {

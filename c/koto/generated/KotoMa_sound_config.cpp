@@ -8,12 +8,12 @@ KotoMa_sound_config* KotoMa_sound_config_create(void) {
     return koto::c(new ma_sound_config());
 }
 
-void KotoMa_sound_config_destroy(KotoMa_sound_config* self) {
-    delete koto::cpp(self);
-}
-
 const char* KotoMa_sound_config_GetFilePath(const KotoMa_sound_config* self) {
     return koto::cpp(self)->pFilePath;
+}
+
+void KotoMa_sound_config_SetFilePath(KotoMa_sound_config* self, const char* value) {
+    koto::cpp(self)->pFilePath = koto::keep(&koto::cpp(self)->pFilePath, value);
 }
 
 void* KotoMa_sound_config_GetDataSource(const KotoMa_sound_config* self) {
@@ -118,10 +118,6 @@ void KotoMa_sound_config_GetLoopPointEndInPCMFrames(const KotoMa_sound_config* s
 
 void KotoMa_sound_config_SetLoopPointEndInPCMFrames(KotoMa_sound_config* self, uint64_t value) {
     koto::cpp(self)->loopPointEndInPCMFrames = static_cast<unsigned long long>(value);
-}
-
-void* KotoMa_sound_config_GetEndCallbackUserData(const KotoMa_sound_config* self) {
-    return koto::cpp(self)->pEndCallbackUserData;
 }
 
 void KotoMa_sound_config_GetPitchResampling(const KotoMa_sound_config* self, KotoMa_resampler_config* out) {

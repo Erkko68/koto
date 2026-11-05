@@ -7,11 +7,11 @@ import io.github.erkko68.koto.interop.NativePointer
 @ExternalSymbolName("KotoMa_sound_config_create")
 internal external fun KotoMa_sound_config_create(): NativePointer
 
-@ExternalSymbolName("KotoMa_sound_config_destroy")
-internal external fun KotoMa_sound_config_destroy(self: NativePointer)
-
 @ExternalSymbolName("KotoMa_sound_config_GetFilePath")
 internal external fun KotoMa_sound_config_GetFilePath(self: NativePointer): NativePointer
+
+@ExternalSymbolName("KotoMa_sound_config_SetFilePath")
+internal external fun KotoMa_sound_config_SetFilePath(self: NativePointer, value: NativePointer)
 
 @ExternalSymbolName("KotoMa_sound_config_GetDataSource")
 internal external fun KotoMa_sound_config_GetDataSource(self: NativePointer): NativePointer
@@ -90,9 +90,6 @@ internal external fun KotoMa_sound_config_GetLoopPointEndInPCMFrames(self: Nativ
 
 @ExternalSymbolName("KotoMa_sound_config_SetLoopPointEndInPCMFrames")
 internal external fun KotoMa_sound_config_SetLoopPointEndInPCMFrames(self: NativePointer, value: Long)
-
-@ExternalSymbolName("KotoMa_sound_config_GetEndCallbackUserData")
-internal external fun KotoMa_sound_config_GetEndCallbackUserData(self: NativePointer): NativePointer
 
 @ExternalSymbolName("KotoMa_sound_config_GetPitchResampling")
 internal external fun KotoMa_sound_config_GetPitchResampling(self: NativePointer, out: NativePointer)

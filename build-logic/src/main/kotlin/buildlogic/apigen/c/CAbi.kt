@@ -23,6 +23,9 @@ internal object CAbi {
     /** The C type of each element behind a pointer to the builtin [cpp], which nothing widens. */
     fun element(cpp: String) = FIXED.getValue(cpp.removePrefix("std::"))
 
+    /** Whether [cpp]'s width is the target's: `size_t`, `long`, … */
+    fun targetWidth(cpp: String) = cpp in TARGET_WIDTH
+
     fun isBuiltin(cpp: String) = cpp.removePrefix("std::") in FIXED
 
     fun returnsThroughPointer(c: String) = c == "int64_t" || c == "uint64_t"

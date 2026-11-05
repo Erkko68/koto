@@ -28,9 +28,6 @@ internal external fun KotoMa_context_config_GetThreadStackSize(self: NativePoint
 @ExternalSymbolName("KotoMa_context_config_SetThreadStackSize")
 internal external fun KotoMa_context_config_SetThreadStackSize(self: NativePointer, value: Int)
 
-@ExternalSymbolName("KotoMa_context_config_GetUserData")
-internal external fun KotoMa_context_config_GetUserData(self: NativePointer): NativePointer
-
 @ExternalSymbolName("KotoMa_context_config_GetAllocationCallbacks")
 internal external fun KotoMa_context_config_GetAllocationCallbacks(self: NativePointer, out: NativePointer)
 
@@ -39,6 +36,9 @@ internal external fun KotoMa_context_config_SetAllocationCallbacks(self: NativeP
 
 @ExternalSymbolName("KotoMa_context_config_GetDsound_hWnd")
 internal external fun KotoMa_context_config_GetDsound_hWnd(self: NativePointer): NativePointer
+
+@ExternalSymbolName("KotoMa_context_config_SetDsound_hWnd")
+internal external fun KotoMa_context_config_SetDsound_hWnd(self: NativePointer, value: NativePointer)
 
 @ExternalSymbolName("KotoMa_context_config_GetAlsa_useVerboseDeviceEnumeration")
 internal external fun KotoMa_context_config_GetAlsa_useVerboseDeviceEnumeration(self: NativePointer): Boolean
@@ -49,8 +49,14 @@ internal external fun KotoMa_context_config_SetAlsa_useVerboseDeviceEnumeration(
 @ExternalSymbolName("KotoMa_context_config_GetPulse_pApplicationName")
 internal external fun KotoMa_context_config_GetPulse_pApplicationName(self: NativePointer): NativePointer
 
+@ExternalSymbolName("KotoMa_context_config_SetPulse_pApplicationName")
+internal external fun KotoMa_context_config_SetPulse_pApplicationName(self: NativePointer, value: NativePointer)
+
 @ExternalSymbolName("KotoMa_context_config_GetPulse_pServerName")
 internal external fun KotoMa_context_config_GetPulse_pServerName(self: NativePointer): NativePointer
+
+@ExternalSymbolName("KotoMa_context_config_SetPulse_pServerName")
+internal external fun KotoMa_context_config_SetPulse_pServerName(self: NativePointer, value: NativePointer)
 
 @ExternalSymbolName("KotoMa_context_config_GetPulse_tryAutoSpawn")
 internal external fun KotoMa_context_config_GetPulse_tryAutoSpawn(self: NativePointer): Boolean
@@ -84,6 +90,9 @@ internal external fun KotoMa_context_config_SetCoreaudio_noAudioSessionDeactivat
 
 @ExternalSymbolName("KotoMa_context_config_GetJack_pClientName")
 internal external fun KotoMa_context_config_GetJack_pClientName(self: NativePointer): NativePointer
+
+@ExternalSymbolName("KotoMa_context_config_SetJack_pClientName")
+internal external fun KotoMa_context_config_SetJack_pClientName(self: NativePointer, value: NativePointer)
 
 @ExternalSymbolName("KotoMa_context_config_GetJack_tryStartServer")
 internal external fun KotoMa_context_config_GetJack_tryStartServer(self: NativePointer): Boolean

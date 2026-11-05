@@ -7,9 +7,6 @@ import io.github.erkko68.koto.interop.NativePointer
 @ExternalSymbolName("KotoMa_engine_config_create")
 internal external fun KotoMa_engine_config_create(): NativePointer
 
-@ExternalSymbolName("KotoMa_engine_config_destroy")
-internal external fun KotoMa_engine_config_destroy(self: NativePointer)
-
 @ExternalSymbolName("KotoMa_engine_config_GetResourceManager")
 internal external fun KotoMa_engine_config_GetResourceManager(self: NativePointer): NativePointer
 
@@ -117,9 +114,6 @@ internal external fun KotoMa_engine_config_GetResourceManagerVFS(self: NativePoi
 
 @ExternalSymbolName("KotoMa_engine_config_SetResourceManagerVFS")
 internal external fun KotoMa_engine_config_SetResourceManagerVFS(self: NativePointer, value: NativePointer)
-
-@ExternalSymbolName("KotoMa_engine_config_GetProcessUserData")
-internal external fun KotoMa_engine_config_GetProcessUserData(self: NativePointer): NativePointer
 
 @ExternalSymbolName("KotoMa_engine_config_GetResourceManagerResampling")
 internal external fun KotoMa_engine_config_GetResourceManagerResampling(self: NativePointer, out: NativePointer)

@@ -75,6 +75,3 @@ internal external fun KotoMa_decoder_config_GetCustomBackendCount(self: NativePo
 
 @ExternalSymbolName("KotoMa_decoder_config_SetCustomBackendCount")
 internal external fun KotoMa_decoder_config_SetCustomBackendCount(self: NativePointer, value: Int)
-
-@ExternalSymbolName("KotoMa_decoder_config_GetCustomBackendUserData")
-internal external fun KotoMa_decoder_config_GetCustomBackendUserData(self: NativePointer): NativePointer

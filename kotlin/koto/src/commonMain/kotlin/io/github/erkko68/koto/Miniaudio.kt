@@ -152,6 +152,12 @@ fun dataSourceSetNext(dataSource: NativePointer, nextDataSource: NativePointer) 
 fun dataSourceGetNext(dataSource: NativePointer): NativePointer =
     Koto_ma_data_source_get_next(dataSource)
 
+fun dataSourceSetNextCallback(dataSource: NativePointer, onGetNext: ((NativePointer) -> NativePointer)?) =
+    run {
+        val onGetNextUser = if (onGetNext == null) NullPointer else Upcalls.reference(NativeCallback { args, result -> val returned = onGetNext(readPointerSlot(args, 0)); writePointerSlot(result, returned) })
+        checkResult(Koto_ma_data_source_set_next_callback(dataSource, Upcalls.function, onGetNextUser))
+    }
+
 /**
  * **********************************************************************************************************************************************************
  *

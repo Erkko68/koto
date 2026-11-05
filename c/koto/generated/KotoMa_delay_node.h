@@ -11,8 +11,8 @@ extern "C" {
 // ma_delay_node
 KotoMa_delay_node* KotoMa_delay_node_create(void);
 void KotoMa_delay_node_destroy(KotoMa_delay_node* self);
-// skipped ma_delay_node::baseNode: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
-// skipped ma_delay_node::delay: (?!.*_config::|ma_device_info::|ma_vec3f::)ma_\w+::.*
+// skipped ma_delay_node::baseNode: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
+// skipped ma_delay_node::delay: (?!.*_config::|ma_device_info::|ma_device_notification::|ma_vec3f::)ma_\w+::.*
 
 
 #ifdef __cplusplus

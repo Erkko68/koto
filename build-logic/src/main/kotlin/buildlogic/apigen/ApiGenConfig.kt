@@ -82,6 +82,8 @@ data class Naming(
      * wrapper returns those, and passes the callee nothing of its own for them.
      */
     val outParameter: String = "",
+    /** The names of the parameters saying how many bytes the `const void*` before them holds: a wrapper passes a byte array. */
+    val byteCount: String = "",
     /** What static function names start with that a typed wrapper's drop: `^s(?=[A-Z])` for `sCreate`. */
     val staticPrefix: String = "",
     /** The verbs of a field's accessors, named as the library names methods. */
@@ -96,6 +98,7 @@ data class Naming(
     internal fun static(name: String) = strip(staticPrefix, name).ifEmpty { name }
     /** Whether the callee only writes the parameter [name]. */
     internal fun isOut(name: String) = outParameter.isNotEmpty() && Regex(outParameter).containsMatchIn(name)
+    internal fun isByteCount(name: String) = byteCount.isNotEmpty() && Regex(byteCount).containsMatchIn(name)
 
     private fun strip(prefix: String, name: String) = if (prefix.isEmpty()) name else Regex(prefix).replace(name, "")
 }

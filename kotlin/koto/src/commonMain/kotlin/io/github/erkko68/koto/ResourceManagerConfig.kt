@@ -58,9 +58,6 @@ class ResourceManagerConfig internal constructor(val resourceManagerConfigHandle
         get() = KotoMa_resource_manager_config_GetCustomDecodingBackendCount(resourceManagerConfigHandle)
         set(value) = KotoMa_resource_manager_config_SetCustomDecodingBackendCount(resourceManagerConfigHandle, value)
 
-    val customDecodingBackendUserData: NativePointer
-        get() = KotoMa_resource_manager_config_GetCustomDecodingBackendUserData(resourceManagerConfigHandle)
-
     var resampling: ResamplerConfig
         get() = run {
             val returned = ResamplerConfig(KotoMa_resampler_config_create(), owned = true)
