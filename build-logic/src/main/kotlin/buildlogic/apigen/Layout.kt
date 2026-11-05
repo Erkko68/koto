@@ -19,7 +19,7 @@ internal class Layout(private val config: ApiGenConfig) {
 
     /**
      * The package of a module's externals in [group]: the module's, with the group before its last segment. Group
-     * `physics/body` of `a.kolt.capi` is `a.kolt.physics.body.capi`, next to the API of `a.kolt.physics.body`.
+     * `node/effect` of `a.koto.capi` is `a.koto.node.effect.capi`, next to the API of `a.koto.node.effect`.
      */
     fun externalsPackage(module: String, group: String): String {
         val pkg = config.kotlin!!.packages.getValue(module)
