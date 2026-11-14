@@ -3,6 +3,11 @@ package io.github.erkko68.koto.capi
 
 import io.github.erkko68.koto.interop.ExternalSymbolName
 import io.github.erkko68.koto.interop.NativePointer
+import io.github.erkko68.koto.interop.loadOnFirstCall
+
+// Initialised before the first call into this file: on the JVM, that loads the library the externals bind to.
+@Suppress("unused")
+private val loaded = loadOnFirstCall()
 
 @ExternalSymbolName("KotoMa_bpf_node_config_create")
 internal external fun KotoMa_bpf_node_config_create(): NativePointer

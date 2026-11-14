@@ -1,6 +1,5 @@
 package io.github.erkko68.koto
 
-import io.github.erkko68.koto.interop.loadNativeLibrary
 import java.util.Collections
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -12,7 +11,6 @@ import kotlin.test.assertTrue
 /** A device's callbacks, on miniaudio's null backend: its own audio thread, with no sound card. */
 class DeviceCallbackTest {
     private fun nullContext(): Context {
-        loadNativeLibrary()
         return Context.init(listOf(Backend.NULL), 1, null)
     }
 

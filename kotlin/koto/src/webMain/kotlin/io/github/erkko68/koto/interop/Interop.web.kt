@@ -17,11 +17,13 @@ internal external interface KotoModule : JsAny {
 
 private fun kotoModule(): KotoModule? = js("globalThis.kotoModule || null")
 
-internal val koto: KotoModule by lazy { kotoModule() ?: error("koto.wasm isn't loaded: wait for createKotoModule() first") }
+internal val koto: KotoModule by lazy { kotoModule() ?: error("koto.wasm isn't loaded: wait for loadKoto() first") }
 
 actual fun loadNativeLibrary() {
     koto
 }
+
+internal actual fun loadOnFirstCall() {}
 
 // The heap's views are read from the module on every access: memory growth replaces them.
 // ponytail: a JS call per element from wasmJs; bulk copies if large arrays show up in profiles.

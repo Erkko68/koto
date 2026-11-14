@@ -3,6 +3,11 @@ package geo.capi
 
 import geo.interop.ExternalSymbolName
 import geo.interop.NativePointer
+import geo.interop.loadOnFirstCall
+
+// Initialised before the first call into this file: on the JVM, that loads the library the externals bind to.
+@Suppress("unused")
+private val loaded = loadOnFirstCall()
 
 @ExternalSymbolName("Geo_distance")
 internal external fun Geo_distance(a: NativePointer, b: NativePointer): Float

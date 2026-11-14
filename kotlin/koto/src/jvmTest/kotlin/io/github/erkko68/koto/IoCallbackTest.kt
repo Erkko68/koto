@@ -1,7 +1,6 @@
 package io.github.erkko68.koto
 
 import io.github.erkko68.koto.interop.KotoJni
-import io.github.erkko68.koto.interop.loadNativeLibrary
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
@@ -55,7 +54,6 @@ class IoCallbackTest {
     }
 
     private fun wav(samples: FloatArray) = Memory().also { file ->
-        loadNativeLibrary()
         val config = EncoderConfig.init(EncodingFormat.WAV, Format.F32, 1, RATE)
         val encoder = config.use { Encoder.init({ _, from, count -> file.write(from, count) }, { _, offset, origin -> file.seek(offset, origin) }, it) }
         frames(samples.size) { p ->
@@ -94,7 +92,6 @@ class IoCallbackTest {
 
     @Test
     fun anEngineCallsItsProcessDataAndNotificationCallbacks() {
-        loadNativeLibrary()
         val processed = AtomicLong()
         val rendered = CountDownLatch(1)
         val started = CountDownLatch(1)
@@ -121,7 +118,6 @@ class IoCallbackTest {
 
     @Test
     fun aConfigKeepsTheStringsSetOnIt() {
-        loadNativeLibrary()
         SoundConfig.init().use { config ->
             config.filePath = buildString { append("shot.wav") }
             System.gc()

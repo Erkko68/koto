@@ -12,6 +12,8 @@ actual fun loadNativeLibrary() {
     KotoJni
 }
 
+internal actual fun loadOnFirstCall() = loadNativeLibrary()
+
 actual class InteropScope actual constructor() {
     private val allocations = ArrayList<Long>(2)
 

@@ -1,6 +1,5 @@
 package io.github.erkko68.koto
 
-import io.github.erkko68.koto.interop.loadNativeLibrary
 import org.junit.Assume.assumeTrue
 import java.io.File
 import kotlin.math.PI
@@ -31,7 +30,6 @@ class ListenTest {
         val listen = System.getenv("KOTO_LISTEN")
         assumeTrue("Set KOTO_LISTEN to listen", listen != null)
         val file = listen.takeIf { File(it).isFile } ?: CLIP
-        loadNativeLibrary()
         println("miniaudio ${versionString()}, playing $file")
         val engine = EngineConfig.init().use { Engine.init(it) }
         engine.use {

@@ -1,7 +1,6 @@
 package io.github.erkko68.koto
 
 import io.github.erkko68.koto.interop.NativeException
-import io.github.erkko68.koto.interop.loadNativeLibrary
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -9,7 +8,6 @@ import kotlin.test.assertTrue
 
 class EngineTest {
     private fun engine(): Engine {
-        loadNativeLibrary()
         return EngineConfig.init().use { config ->
             config.noDevice = true
             config.channels = 2
@@ -20,7 +18,6 @@ class EngineTest {
 
     @Test
     fun version() {
-        loadNativeLibrary()
         assertEquals("0.11.26", versionString())
     }
 

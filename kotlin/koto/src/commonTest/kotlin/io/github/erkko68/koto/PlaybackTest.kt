@@ -2,7 +2,6 @@ package io.github.erkko68.koto
 
 import io.github.erkko68.koto.interop.InteropScope
 import io.github.erkko68.koto.interop.interopScope
-import io.github.erkko68.koto.interop.loadNativeLibrary
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.sin
@@ -30,7 +29,6 @@ class PlaybackTest {
 
     /** An engine mixing for no device, which [mix] reads. */
     private fun engine(): Engine {
-        loadNativeLibrary()
         return EngineConfig.init().use { config ->
             config.noDevice = true
             config.channels = 2
