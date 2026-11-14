@@ -123,8 +123,8 @@ The archive starts empty, so the first release shows no dropdown: it appears fro
 ```bash
 # 1. Bump VERSION_NAME in gradle.properties, move CHANGELOG's [Unreleased] under the version, commit.
 # 2. Tag (no `v` prefix: the workflow's tag filter is [0-9]*).
-git tag -a 0.1.0 -m "Release 0.1.0"
-git push origin 0.1.0
+git tag -a 0.1.1 -m "Release 0.1.1"
+git push origin 0.1.1
 ```
 
 The tag's name becomes the published version (passed to Gradle as `-PVERSION_NAME=${tag}`),

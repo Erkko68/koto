@@ -42,7 +42,8 @@ on top of it. The API and its behavior are the same everywhere:
 | **JVM** | macOS arm64; Linux and Windows, x64 and arm64 | JNI, `libkoto` out of a runtime jar per platform |
 | **Web** | `js`, `wasmJs`, in a browser | miniaudio compiled to wasm with Emscripten, `koto.js` + `koto.wasm` |
 
-On the web, the page includes `koto.js` and waits for `createKotoModule()` before the first call, and a file path means
+Android, iOS and the JVM need no setup: the JVM loads `libkoto` out of its runtime jar on the first call. On the web, the
+page includes `koto.js`, and Kotlin waits for `loadKoto()` (a `Promise`) before the first call; a file path there means
 one in Emscripten's virtual filesystem: pass the audio as bytes instead.
 
 ## Installation

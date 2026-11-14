@@ -7,6 +7,16 @@ release's notes (`.github/workflows/publish.yml`).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-14
+
+### Added
+- **`loadKoto()` on the web**: loads koto.wasm from Kotlin, a `Promise` to wait for before the first call, instead of
+  calling `createKotoModule()` from the page.
+
+### Fixed
+- **The JVM and Android load libkoto on the first call**: calling `loadNativeLibrary()` first is no longer needed;
+  without it, `EngineConfig.init()` and every other call threw `UnsatisfiedLinkError`.
+
 ## [0.1.0] - 2026-11-05
 
 ### Added
@@ -31,5 +41,6 @@ release's notes (`.github/workflows/publish.yml`).
 - Enums whose values miniaudio sets explicitly: `DeviceType` was off by one, and `ChannelMixMode.DEFAULT` and
   `MonoExpansionMode.DEFAULT` weren't their aliases.
 
-[Unreleased]: https://github.com/Erkko68/koto/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/Erkko68/koto/compare/0.1.1...HEAD
+[0.1.1]: https://github.com/Erkko68/koto/releases/tag/0.1.1
 [0.1.0]: https://github.com/Erkko68/koto/releases/tag/0.1.0

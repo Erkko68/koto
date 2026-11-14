@@ -11,6 +11,12 @@ expect val NullPointer: NativePointer
 /** Loads the C API where it isn't linked into the binary; before the first call into it. */
 expect fun loadNativeLibrary()
 
+/**
+ * What each file of capi/ runs as it's initialised: [loadNativeLibrary] on the JVM, so no call needs one first. Nothing
+ * elsewhere: Native links the C API in, and the web's must be awaited (`loadKoto()`) before the first call.
+ */
+internal expect fun loadOnFirstCall()
+
 /** The C symbol a common `external fun` binds to (`@SymbolName` on Kotlin/Native, absent elsewhere). */
 @OptIn(ExperimentalMultiplatform::class)
 @OptionalExpectation

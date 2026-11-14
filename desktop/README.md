@@ -13,8 +13,8 @@ that finds it at run time. `:kotlin:koto`'s JVM target depends on it.
 - **Runtime jars:** each `runtime-<id>` jar takes the host's library from `cmakeBuild` and every other platform's
   from `-PcArtifactsDir=<dir>` (`<dir>/<id>/`), which CI's publish job fills; publishing an empty jar to a repository
   fails.
-- **Loading:** `loadNativeLibrary()` reaches `KotoLoader.load()`, which extracts the library once into a content-hash-keyed
-  cache dir (`~/.koto/koto-<hash>/`) and `System.load`s it. Knobs: `koto.library.path` (load from that directory
+- **Loading:** the first call into koto (or `loadNativeLibrary()`) reaches `KotoLoader.load()`, which extracts the
+  library once into a content-hash-keyed cache dir (`~/.koto/koto-<hash>/`) and `System.load`s it. Knobs: `koto.library.path` (load from that directory
   instead), `koto.data.path` (cache root), `koto.data.cleanup.days` (stale-cache purge age, default 30, `<= 0`
   disables).
 - **Seal:** only `Java_*` and `JNI_OnLoad` are exported; miniaudio stays local to the image. On Linux the C++ runtime

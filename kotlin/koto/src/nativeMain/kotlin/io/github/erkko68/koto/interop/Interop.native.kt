@@ -29,6 +29,8 @@ actual typealias ExternalSymbolName = kotlin.native.SymbolName
 
 actual fun loadNativeLibrary() {}
 
+internal actual fun loadOnFirstCall() {}
+
 actual class InteropScope actual constructor() {
     private val pinned = ArrayList<Pinned<*>>(2)
 
